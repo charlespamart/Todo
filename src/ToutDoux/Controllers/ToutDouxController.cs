@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -21,7 +24,15 @@ namespace ToutDoux.Controllers
         [HttpGet]
         public void Get()
         {
-            Console.WriteLine(ToutDoux.Message);
+            Console.WriteLine(ToutDoux.MessageGET);
+        }
+        [HttpPost]
+        public async Task<string> Post()
+        {
+            Console.WriteLine(ToutDoux.MessagePOST);
+            var request = HttpContext.Request;
+            using var sr = new StreamReader(request.Body);
+            return await sr.ReadToEndAsync();
         }
     }
 }

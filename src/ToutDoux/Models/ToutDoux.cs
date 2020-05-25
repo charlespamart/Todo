@@ -4,6 +4,7 @@ namespace ToutDoux
 {
     public class ToutDoux
     {
-        static public string Message = "Hello there.";
+        static public string MessageGET = "Catched a GET request";
+        static public string MessagePOST = "Catched a POST request";
     }
 }
