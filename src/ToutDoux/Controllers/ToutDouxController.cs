@@ -34,5 +34,10 @@ namespace ToutDoux.Controllers
             using var sr = new StreamReader(request.Body);
             return await sr.ReadToEndAsync();
         }
+        [HttpDelete]
+        public void Delete()
+        {
+            Console.WriteLine(ToutDoux.MessageDELETE);
+        }
     }
 }
