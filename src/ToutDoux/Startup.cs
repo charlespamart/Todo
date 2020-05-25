@@ -11,6 +11,7 @@ namespace ToutDoux
 {
     public class Startup
     {
+        readonly string MyCorsPolicyAllowAll = nameof(MyCorsPolicyAllowAll);
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -21,6 +22,15 @@ namespace ToutDoux
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddCors(options => {
+                options.AddPolicy(name: MyCorsPolicyAllowAll,
+                              builder =>
+                              {
+                                  builder.AllowAnyOrigin();
+                                  builder.AllowAnyMethod();
+                                  builder.AllowAnyHeader();
+                              });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -31,6 +41,8 @@ namespace ToutDoux
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors(MyCorsPolicyAllowAll);
 
             app.UseRouting();
 
