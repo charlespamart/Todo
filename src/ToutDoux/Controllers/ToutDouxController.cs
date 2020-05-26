@@ -26,9 +26,9 @@ namespace ToutDoux.Controllers
         }
 
         [HttpGet("{id}", Name = "GetById")]
-        public void GetById(int id)
+        public ToutDouxTask GetById(int id)
         {
-            _logger.LogInformation("ToutDouxTask {ToutDouxTaskId} was requested", id);
+            return _toutDouxRepository.GetToutDouxTask(id);
         }
 
         [HttpPost]
