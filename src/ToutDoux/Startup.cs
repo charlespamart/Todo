@@ -1,17 +1,22 @@
+
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json.Serialization;
+using ToutDoux.Interfaces;
 using ToutDoux.Models;
+using ToutDoux.Service;
 
 namespace ToutDoux
 {
     public class Startup
     {
         private readonly string _myCorsPolicyAllowAll = "CorsPolicyAllowAll";
+
         public IConfiguration Configuration { get; }
         public Startup(IConfiguration configuration)
         {
@@ -20,12 +25,17 @@ namespace ToutDoux
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options => {
+                options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            });
+
+            services.AddScoped<IToutDouxRepository, ToutDouxRepository>();
 
             services.AddDbContext<ToutDouxContext>(opt =>
                 opt.UseInMemoryDatabase("ToutDouxDB"));
 
-            services.AddCors(options => {
+            services.AddCors(options =>
+            {
                 options.AddPolicy(name: _myCorsPolicyAllowAll,
                               builder =>
                               {
@@ -54,9 +64,6 @@ namespace ToutDoux
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapGet("/", async context => {
-                    await context.Response.WriteAsync("Hello there.");
-                });
             });
 
         }
