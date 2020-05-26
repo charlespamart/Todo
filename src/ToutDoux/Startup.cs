@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Threading.Tasks;
+using ToutDoux.Models;
 
 namespace ToutDoux
 {
@@ -22,6 +22,10 @@ namespace ToutDoux
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddDbContext<ToutDouxContext>(opt =>
+                opt.UseInMemoryDatabase("ToutDouxDB"));
+
             services.AddCors(options => {
                 options.AddPolicy(name: MyCorsPolicyAllowAll,
                               builder =>

@@ -14,6 +14,7 @@ namespace ToutDoux
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
+            Console.Clear();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
