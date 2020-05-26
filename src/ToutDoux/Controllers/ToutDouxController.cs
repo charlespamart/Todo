@@ -1,11 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.IO;
 using System.Text.Json;
-using System.Threading.Tasks;
 using ToutDoux.Models;
 
 namespace ToutDoux.Controllers
@@ -15,39 +10,38 @@ namespace ToutDoux.Controllers
     public class ToutDouxController : ControllerBase
     {
         private readonly ILogger<ToutDouxController> _logger;
-        private readonly ToutDouxContext _DBContext;
+        private readonly ToutDouxContext _dbContext;
 
-        public ToutDouxController(ILogger<ToutDouxController> logger, ToutDouxContext DBContext)
+        public ToutDouxController(ILogger<ToutDouxController> logger, ToutDouxContext dbContext)
         {
             _logger = logger;
-            _DBContext = DBContext;
+            _dbContext = dbContext;
         }
 
         [HttpGet]
         public void Get()
         {
-            Console.WriteLine(ToutDoux.MessageGET);
         }
 
         [HttpGet("{id}")]
-        public void GetById()
+        public void GetById(int id)
         {
-            Console.WriteLine(ToutDoux.MessageGET);
+            _logger.LogInformation("ToutDouxTask {ToutDouxTaskId} was requested", id);
         }
 
         [HttpPost]
         public string Post(ToutDouxTask toutDouxTask)
         {
-            _DBContext.ToutDouxTasks.Add(toutDouxTask);
-            _DBContext.SaveChanges();
+            _dbContext.ToutDouxTasks.Add(toutDouxTask);
+            _dbContext.SaveChanges();
 
             return JsonSerializer.Serialize(toutDouxTask);
         }
         [HttpDelete]
         public void Delete()
         {
-            _DBContext.ToutDouxTasks.RemoveRange(_DBContext.ToutDouxTasks);
-            _DBContext.SaveChangesAsync();
+            _dbContext.ToutDouxTasks.RemoveRange(_dbContext.ToutDouxTasks);
+            _dbContext.SaveChangesAsync();
         }
     }
 }
