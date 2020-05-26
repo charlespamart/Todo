@@ -14,12 +14,14 @@ namespace ToutDoux.Service
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
-
-        public List<ToutDouxTask> GetToutDoux()
+        public ToutDouxTask[]  GetToutDouxTasks()
         {
-            return _dbContext.ToutDouxTasks.ToList();
+            return _dbContext.ToutDouxTasks.ToArray();
         }
-
+        public ToutDouxTask GetToutDouxTask(long id)
+        {
+            return _dbContext.ToutDouxTasks.Find(id);
+        }
         public void Add(ToutDouxTask toutDouxTask)
         {
             _dbContext.ToutDouxTasks.Add(toutDouxTask);

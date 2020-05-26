@@ -20,8 +20,9 @@ namespace ToutDoux.Controllers
         }
 
         [HttpGet]
-        public void Get()
+        public ToutDouxTask[] Get()
         {
+            return _toutDouxRepository.GetToutDouxTasks();
         }
 
         [HttpGet("{id}", Name = "GetById")]

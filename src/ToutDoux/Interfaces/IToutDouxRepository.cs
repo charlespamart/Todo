@@ -5,7 +5,8 @@ namespace ToutDoux.Interfaces
 {
     public interface IToutDouxRepository
     {
-        List<ToutDouxTask> GetToutDoux();
+        ToutDouxTask[] GetToutDouxTasks();
+        ToutDouxTask GetToutDouxTask(long id);
         void Add(ToutDouxTask toutDouxTask);
         void Remove(ToutDouxTask toutDouxTask);
         void RemoveAll();
