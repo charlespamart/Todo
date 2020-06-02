@@ -12,7 +12,7 @@ namespace Todo.Service
 
         public TodoRepository(TodoContext dbContext)
         {
-            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+            _dbContext = dbContext;
         }
         public TodoTask[]  GetTodoTasks()
         {

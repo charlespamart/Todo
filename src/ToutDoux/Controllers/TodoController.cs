@@ -15,8 +15,8 @@ namespace Todo.Controllers
 
         public TodoController(ILogger<TodoController> logger, ITodoRepository TodoRepository)
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _TodoRepository = TodoRepository ?? throw new ArgumentNullException(nameof(TodoRepository));
+            _logger = logger;
+            _TodoRepository = TodoRepository;
         }
 
         [HttpGet]
