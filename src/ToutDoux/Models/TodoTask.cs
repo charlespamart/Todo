@@ -11,7 +11,7 @@ namespace Todo.Models
         {
             get
             {
-                return $"https://localhost:5001/todos/{Id}";
+                return $"https://localhost:5001/todotasks/{Id}";
             }
         }
     }

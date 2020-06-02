@@ -6,13 +6,13 @@ using Todo.Models;
 namespace Todo.Controllers
 {
     [ApiController]
-    [Route("Todos")]
-    public class TodoController : ControllerBase
+    [Route("TodoTasks")]
+    public class TodoTasksController : ControllerBase
     {
-        private readonly ILogger<TodoController> _logger;
+        private readonly ILogger<TodoTasksController> _logger;
         private readonly ITodoRepository _TodoRepository;
 
-        public TodoController(ILogger<TodoController> logger, ITodoRepository TodoRepository)
+        public TodoTasksController(ILogger<TodoTasksController> logger, ITodoRepository TodoRepository)
         {
             _logger = logger;
             _TodoRepository = TodoRepository;
