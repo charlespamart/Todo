@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc.Routing;
 
-namespace ToutDoux.Models
+namespace Todo.Models
 {
-    public class ToutDouxTask
+    public class TodoTask
     {
         public long Id{ get; set; }
         public string Title { get; set; }
@@ -11,12 +11,12 @@ namespace ToutDoux.Models
         {
             get
             {
-                return $"https://localhost:5001/toutdoux/{Id}";
+                return $"https://localhost:5001/Todo/{Id}";
             }
         }
     }
 
-    public class ToutDouxTaskForCreationDTO
+    public class TodoTaskForCreationDTO
     {
         public string Title { get; set; }
     }

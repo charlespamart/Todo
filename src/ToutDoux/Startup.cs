@@ -7,11 +7,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Serialization;
-using ToutDoux.Interfaces;
-using ToutDoux.Models;
-using ToutDoux.Service;
+using Todo.Interfaces;
+using Todo.Models;
+using Todo.Service;
 
-namespace ToutDoux
+namespace Todo
 {
     public class Startup
     {
@@ -29,10 +29,10 @@ namespace ToutDoux
                 options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             });
 
-            services.AddScoped<IToutDouxRepository, ToutDouxRepository>();
+            services.AddScoped<ITodoRepository, TodoRepository>();
 
-            services.AddDbContext<ToutDouxContext>(opt =>
-                opt.UseInMemoryDatabase("ToutDouxDB"));
+            services.AddDbContext<TodoContext>(opt =>
+                opt.UseInMemoryDatabase("TodoDB"));
 
             services.AddCors(options =>
             {
