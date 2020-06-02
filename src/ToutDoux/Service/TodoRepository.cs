@@ -14,6 +14,7 @@ namespace Todo.Service
         {
             _dbContext = dbContext;
         }
+
         public TodoTask[]  GetTodoTasks()
         {
             return _dbContext.TodoTasks.ToArray();
