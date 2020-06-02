@@ -7,7 +7,7 @@ using Todo.Models;
 namespace Todo.Controllers
 {
     [ApiController]
-    [Route("Todo")]
+    [Route("Todos")]
     public class TodoController : ControllerBase
     {
         private readonly ILogger<TodoController> _logger;
@@ -20,26 +20,26 @@ namespace Todo.Controllers
         }
 
         [HttpGet]
-        public TodoTask[] Get()
+        public TodoTask[] GetTodoTasks()
         {
             return _TodoRepository.GetTodoTasks();
         }
 
-        [HttpGet("{id}", Name = "GetById")]
-        public TodoTask GetById(int id)
+        [HttpGet("{id}")]
+        public TodoTask GetTodoTask(int id)
         {
             return _TodoRepository.GetTodoTask(id);
         }
 
         [HttpPost]
-        public IActionResult Post(TodoTask TodoTask)
+        public IActionResult CreateTodoTask(TodoTask TodoTask)
         {
             _TodoRepository.Add(TodoTask);
             return CreatedAtRoute("GetById", new { id = TodoTask.Id }, TodoTask);
         }
 
         [HttpDelete]
-        public void Delete()
+        public void DeleteTodoTasks()
         {
             _TodoRepository.RemoveAll();
         }
