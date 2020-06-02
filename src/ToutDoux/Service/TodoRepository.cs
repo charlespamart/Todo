@@ -33,7 +33,7 @@ namespace Todo.Service
             _dbContext.TodoTasks.Remove(TodoTask);
             _dbContext.SaveChanges();
         }
-        public void RemoveAll()
+        public void Clear()
         {
             _dbContext.Database.EnsureDeleted();
         }

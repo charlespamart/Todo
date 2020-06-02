@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
 using Todo.Interfaces;
 using Todo.Models;
 
@@ -25,7 +24,7 @@ namespace Todo.Controllers
             return _TodoRepository.GetTodoTasks();
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetTodoTask")]
         public TodoTask GetTodoTask(int id)
         {
             return _TodoRepository.GetTodoTask(id);
@@ -35,13 +34,13 @@ namespace Todo.Controllers
         public IActionResult CreateTodoTask(TodoTask TodoTask)
         {
             _TodoRepository.Add(TodoTask);
-            return CreatedAtRoute("GetById", new { id = TodoTask.Id }, TodoTask);
+            return CreatedAtRoute("GetTodoTask", new { id = TodoTask.Id }, TodoTask);
         }
 
         [HttpDelete]
         public void DeleteTodoTasks()
         {
-            _TodoRepository.RemoveAll();
+            _TodoRepository.Clear();
         }
     }
 }
