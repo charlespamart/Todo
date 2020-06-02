@@ -15,9 +15,4 @@ namespace Todo.Models
             }
         }
     }
-
-    public class TodoTaskForCreationDTO
-    {
-        public string Title { get; set; }
-    }
 }
