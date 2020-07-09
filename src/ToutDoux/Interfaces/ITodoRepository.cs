@@ -8,7 +8,7 @@ namespace Todo.Interfaces
         TodoTask[] GetTodoTasks();
         TodoTask GetTodoTask(long id);
         void Add(TodoTask TodoTask);
-        void Remove(TodoTask TodoTask);
+        void Remove(long id);
         TodoTask Update(long i, TodoTask TodoTask);
         void Clear();
     }

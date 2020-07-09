@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using Todo.Interfaces;
 using Todo.Models;
@@ -29,8 +30,9 @@ namespace Todo.Service
             _dbContext.SaveChanges();
         }
 
-        public void Remove(TodoTask TodoTask)
+        public void Remove(long id)
         {
+            var TodoTask = _dbContext.TodoTasks.Find(id);
             _dbContext.TodoTasks.Remove(TodoTask);
             _dbContext.SaveChanges();
         }

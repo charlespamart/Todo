@@ -37,8 +37,14 @@ namespace Todo.Controllers
             return CreatedAtRoute("GetTodoTask", new { id = TodoTask.Id }, TodoTask);
         }
 
+        [HttpDelete("{id}")]
+        public void RemoveTodoTask(long id)
+        {
+            _TodoRepository.Remove(id);
+        }
+
         [HttpDelete]
-        public void DeleteTodoTasks()
+        public void RemoveTodoTasks()
         {
             _TodoRepository.Clear();
         }
