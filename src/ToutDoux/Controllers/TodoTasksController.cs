@@ -25,7 +25,7 @@ namespace Todo.Controllers
         }
 
         [HttpGet("{id}", Name = "GetTodoTask")]
-        public TodoTask GetTodoTask(int id)
+        public TodoTask GetTodoTask(long id)
         {
             return _TodoRepository.GetTodoTask(id);
         }
@@ -41,6 +41,12 @@ namespace Todo.Controllers
         public void DeleteTodoTasks()
         {
             _TodoRepository.Clear();
+        }
+
+        [HttpPatch("{id}")]
+        public TodoTask UpdateTodoTask(long id, TodoTask TodoTask)
+        {
+            return _TodoRepository.Update(id, TodoTask);
         }
     }
 }

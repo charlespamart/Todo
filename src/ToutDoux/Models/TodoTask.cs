@@ -11,8 +11,9 @@ namespace Todo.Models
         {
             get
             {
-                return $"https://localhost:5001/todotasks/{Id}";
+                return $"https://localhost:5001/todotasks/{Id}"; // TODO: Change this atrocity
             }
         }
+        public long Order { get; set; }
     }
 }

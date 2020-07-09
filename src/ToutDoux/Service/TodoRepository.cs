@@ -34,6 +34,17 @@ namespace Todo.Service
             _dbContext.TodoTasks.Remove(TodoTask);
             _dbContext.SaveChanges();
         }
+        public TodoTask Update(long id, TodoTask TodoTask)
+        {
+            TodoTask todoTaskToUpdate = _dbContext.TodoTasks.Find(id);
+
+            todoTaskToUpdate.Completed = TodoTask.Completed;
+            todoTaskToUpdate.Order = TodoTask.Order;
+            todoTaskToUpdate.Title = TodoTask.Title;
+
+            _dbContext.SaveChanges();
+            return todoTaskToUpdate;
+        }
         public void Clear()
         {
             _dbContext.Database.EnsureDeleted();
