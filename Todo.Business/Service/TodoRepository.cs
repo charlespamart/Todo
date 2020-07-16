@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
 using System.Linq;
+using Todo.DAL;
+using Todo.Domain.Models;
 using Todo.Interfaces;
-using Todo.Models;
 
 namespace Todo.Service
 {
@@ -16,36 +15,29 @@ namespace Todo.Service
             _dbContext = dbContext;
         }
 
-        public TodoTask[]  GetTodoTasks()
+        public TodoTaskData[]  GetTodoTasks()
         {
             return _dbContext.TodoTasks.ToArray();
         }
-        public TodoTask GetTodoTask(long id)
+        public TodoTaskData GetTodoTask(Guid id)
         {
             return _dbContext.TodoTasks.Find(id);
         }
-        public void Add(TodoTask TodoTask)
+        public void Add(TodoTaskData TodoTask)
         {
             _dbContext.TodoTasks.Add(TodoTask);
             _dbContext.SaveChanges();
         }
 
-        public void Remove(long id)
+        public void Remove(TodoTaskData todoTask)
         {
-            var TodoTask = _dbContext.TodoTasks.Find(id);
-            _dbContext.TodoTasks.Remove(TodoTask);
+            _dbContext.TodoTasks.Remove(todoTask);
             _dbContext.SaveChanges();
         }
-        public TodoTask Update(long id, TodoTask TodoTask)
+        public void Update(TodoTaskData todoTask)
         {
-            TodoTask todoTaskToUpdate = _dbContext.TodoTasks.Find(id);
-
-            todoTaskToUpdate.Completed = TodoTask.Completed;
-            todoTaskToUpdate.Order = TodoTask.Order;
-            todoTaskToUpdate.Title = TodoTask.Title;
-
+            _dbContext.Update(todoTask);
             _dbContext.SaveChanges();
-            return todoTaskToUpdate;
         }
         public void Clear()
         {

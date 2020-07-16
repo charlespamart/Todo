@@ -1,19 +1,27 @@
-﻿using Microsoft.AspNetCore.Mvc.Routing;
+﻿using System;
+using Todo.Domain.Models;
 
-namespace Todo.Models
+namespace Todo.API.Models
 {
     public class TodoTask
     {
-        public long Id{ get; set; }
-        public string Title { get; set; }
-        public bool Completed { get; set; }
-        public string Url
+        public static TodoTask FromDAL(TodoTaskData todoTask)
         {
-            get
-            {
-                return $"https://localhost:5001/todotasks/{Id}"; // TODO: Change this atrocity
-            }
+            return new TodoTask(todoTask);
         }
-        public long Order { get; set; }
+        public TodoTask(TodoTaskData todoTask)
+        {
+            Id = todoTask.Id;
+            Title = todoTask.Title;
+            Completed = todoTask.Completed;
+            Order = todoTask.Order;
+            Url = todoTask.Url;
+        }
+        public Guid Id { get; }
+        public string Title { get;}
+        public bool Completed { get;}
+        public int Order { get;}
+        public Uri Url { get;}
     }
+
 }

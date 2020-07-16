@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
+using Todo.API.Models;
+using Todo.Domain.Models;
 using Todo.Interfaces;
-using Todo.Models;
 
 namespace Todo.Controllers
 {
@@ -19,40 +21,62 @@ namespace Todo.Controllers
         }
 
         [HttpGet]
-        public TodoTask[] GetTodoTasks()
+        public IActionResult GetTodoTasks()
         {
-            return _TodoRepository.GetTodoTasks();
+            return Ok(_TodoRepository.GetTodoTasks());
         }
 
         [HttpGet("{id}", Name = "GetTodoTask")]
-        public TodoTask GetTodoTask(long id)
+        public IActionResult GetTodoTask(Guid id)
         {
-            return _TodoRepository.GetTodoTask(id);
+            var todoTask = _TodoRepository.GetTodoTask(id);
+            if (todoTask == null)
+            {
+                return NotFound();
+            }
+            return Ok(TodoTask.FromDAL(todoTask));
         }
 
         [HttpPost]
-        public IActionResult CreateTodoTask(TodoTask TodoTask)
+        public IActionResult CreateTodoTask(TodoTaskData todoTaskToCreate)
         {
-            _TodoRepository.Add(TodoTask);
-            return CreatedAtRoute("GetTodoTask", new { id = TodoTask.Id }, TodoTask);
+            _TodoRepository.Add(todoTaskToCreate);
+            var todoTask = TodoTask.FromDAL(todoTaskToCreate);
+            return CreatedAtRoute("GetTodoTask", new { id = todoTask.Id }, todoTask);
         }
 
         [HttpDelete("{id}")]
-        public void RemoveTodoTask(long id)
+        public IActionResult RemoveTodoTask(Guid id)
         {
-            _TodoRepository.Remove(id);
+            var todoTask = _TodoRepository.GetTodoTask(id);
+            if (todoTask == null)
+            {
+                return NotFound();
+            }
+            _TodoRepository.Remove(todoTask);
+            return NoContent();
         }
 
         [HttpDelete]
-        public void RemoveTodoTasks()
+        public IActionResult RemoveTodoTasks()
         {
             _TodoRepository.Clear();
+            return NoContent();
         }
 
         [HttpPatch("{id}")]
-        public TodoTask UpdateTodoTask(long id, TodoTask TodoTask)
+        public IActionResult UpdateTodoTask(Guid id, TodoTaskData todoTask)
         {
-            return _TodoRepository.Update(id, TodoTask);
+            var todoTaskToUpdate = _TodoRepository.GetTodoTask(id);
+            if (todoTaskToUpdate == null)
+            {
+                return NotFound();
+            }
+            todoTaskToUpdate.Title = todoTask.Title;
+            todoTaskToUpdate.Order = todoTask.Order;
+            todoTaskToUpdate.Completed = todoTask.Completed;
+            _TodoRepository.Update(todoTaskToUpdate);
+            return Ok(todoTaskToUpdate);
         }
     }
 }
