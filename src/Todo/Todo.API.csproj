@@ -10,8 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Todo.Business\Todo.Business.csproj" />
-    <ProjectReference Include="..\..\Todo.Domain\Todo.Domain.csproj" />
+    <ProjectReference Include="..\Todo.Business\Todo.Business.csproj" />
+    <ProjectReference Include="..\Todo.Domain\Todo.Domain.csproj" />
   </ItemGroup>
 
 
