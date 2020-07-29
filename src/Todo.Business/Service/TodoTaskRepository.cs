@@ -6,11 +6,11 @@ using Todo.Interfaces;
 
 namespace Todo.Service
 {
-    public class TodoRepository : ITodoRepository
+    public class TodoTaskRepository : ITodoTaskRepository
     {
-        private readonly TodoContext _dbContext;
+        private readonly TodoTaskContext _dbContext;
 
-        public TodoRepository(TodoContext dbContext)
+        public TodoTaskRepository(TodoTaskContext dbContext)
         {
             _dbContext = dbContext;
         }

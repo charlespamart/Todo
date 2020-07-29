@@ -3,18 +3,26 @@ using System;
 
 namespace Todo.Domain.Models
 {
-    public class TodoTaskData
+    public class TodoTaskData : IEquatable<TodoTaskData>
     {
         public Guid Id{ get; set; }
         public string Title { get; set; }
         public bool Completed { get; set; }
-        public Uri Url
-        {
-            get
-            {
-                return new Uri($"https://localhost:5001/todotasks/{Id}"); // TODO: Change this atrocity
-            }
-        }
         public int Order { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        public bool Equals(TodoTaskData todoTaskData)
+        {
+            return todoTaskData != null && Id == todoTaskData.Id && Title == todoTaskData.Title && Completed == todoTaskData.Completed && Order == todoTaskData.Order;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

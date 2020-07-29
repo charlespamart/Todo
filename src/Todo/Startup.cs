@@ -29,9 +29,9 @@ namespace Todo
                 options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             });
 
-            services.AddScoped<ITodoRepository, TodoRepository>();
+            services.AddScoped<ITodoTaskRepository, TodoTaskRepository>();
 
-            services.AddDbContext<TodoContext>(opt =>
+            services.AddDbContext<TodoTaskContext>(opt =>
                 opt.UseInMemoryDatabase("TodoDB"));
 
             services.AddCors(options =>
@@ -46,7 +46,7 @@ namespace Todo
             });
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, TodoTaskContext todoContext)
         {
             if (env.IsDevelopment())
             {

@@ -3,9 +3,9 @@ using Todo.Domain.Models;
 
 namespace Todo.DAL
 {
-    public class TodoContext : DbContext
+    public class TodoTaskContext : DbContext
     {
-        public TodoContext(DbContextOptions<TodoContext> options)
+        public TodoTaskContext(DbContextOptions<TodoTaskContext> options)
             : base(options)
         {
         }

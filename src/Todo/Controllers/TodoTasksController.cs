@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Linq;
 using Todo.API.Models;
 using Todo.Domain.Models;
 using Todo.Interfaces;
@@ -12,9 +14,9 @@ namespace Todo.Controllers
     public class TodoTasksController : ControllerBase
     {
         private readonly ILogger<TodoTasksController> _logger;
-        private readonly ITodoRepository _TodoRepository;
+        private readonly ITodoTaskRepository _TodoRepository;
 
-        public TodoTasksController(ILogger<TodoTasksController> logger, ITodoRepository TodoRepository)
+        public TodoTasksController(ILogger<TodoTasksController> logger, ITodoTaskRepository TodoRepository)
         {
             _logger = logger;
             _TodoRepository = TodoRepository;
@@ -23,7 +25,10 @@ namespace Todo.Controllers
         [HttpGet]
         public IActionResult GetTodoTasks()
         {
-            return Ok(_TodoRepository.GetTodoTasks());
+            var todoTasks = _TodoRepository.GetTodoTasks();
+            var uri = getBaseUri();
+
+            return Ok(todoTasks.Select(todoTask => TodoTask.FromDAL(todoTask, uri)));
         }
 
         [HttpGet("{id}", Name = "GetTodoTask")]
@@ -34,14 +39,14 @@ namespace Todo.Controllers
             {
                 return NotFound();
             }
-            return Ok(TodoTask.FromDAL(todoTask));
+            return Ok(TodoTask.FromDAL(todoTask, getBaseUri()));
         }
 
         [HttpPost]
         public IActionResult CreateTodoTask(TodoTaskData todoTaskToCreate)
         {
             _TodoRepository.Add(todoTaskToCreate);
-            var todoTask = TodoTask.FromDAL(todoTaskToCreate);
+            var todoTask = TodoTask.FromDAL(todoTaskToCreate, getBaseUri());
             return CreatedAtRoute("GetTodoTask", new { id = todoTask.Id }, todoTask);
         }
 
@@ -76,7 +81,17 @@ namespace Todo.Controllers
             todoTaskToUpdate.Order = todoTask.Order;
             todoTaskToUpdate.Completed = todoTask.Completed;
             _TodoRepository.Update(todoTaskToUpdate);
-            return Ok(todoTaskToUpdate);
+            return Ok(TodoTask.FromDAL(todoTaskToUpdate, getBaseUri()));
+        }
+
+        private string getBaseUri()
+        {
+            var request = HttpContext.Request;
+            var scheme = request.Scheme;
+            var host = request.Host.ToUriComponent();
+            var pathBase = request.PathBase.ToUriComponent();
+
+            return $"{scheme}://{host}{pathBase}/todotasks/";
         }
     }
 }

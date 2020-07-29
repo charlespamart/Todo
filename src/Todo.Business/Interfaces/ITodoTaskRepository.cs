@@ -3,7 +3,7 @@ using Todo.Domain.Models;
 
 namespace Todo.Interfaces
 {
-    public interface ITodoRepository
+    public interface ITodoTaskRepository
     {
         TodoTaskData[] GetTodoTasks();
         TodoTaskData GetTodoTask(Guid id);
