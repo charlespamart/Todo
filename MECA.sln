@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Todo.DAL", "src\Todo.DAL\To
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Todo.Domain", "src\Todo.Domain\Todo.Domain.csproj", "{1ED3CE0B-F806-4697-98C9-BCC40A0A36EE}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Todo.Tests", "test\Todo.Tests\Todo.Tests.csproj", "{5B56E508-71FC-43CE-ACDA-04664B1CA4ED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{1ED3CE0B-F806-4697-98C9-BCC40A0A36EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1ED3CE0B-F806-4697-98C9-BCC40A0A36EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1ED3CE0B-F806-4697-98C9-BCC40A0A36EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B56E508-71FC-43CE-ACDA-04664B1CA4ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B56E508-71FC-43CE-ACDA-04664B1CA4ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B56E508-71FC-43CE-ACDA-04664B1CA4ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B56E508-71FC-43CE-ACDA-04664B1CA4ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
