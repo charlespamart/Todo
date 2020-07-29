@@ -26,7 +26,7 @@ namespace Todo.Controllers
         public IActionResult GetTodoTasks()
         {
             var todoTasks = _TodoRepository.GetTodoTasks();
-            var uri = getBaseUri();
+            var uri = GetBaseUri();
 
             return Ok(todoTasks.Select(todoTask => TodoTask.FromDAL(todoTask, uri)));
         }
@@ -39,14 +39,14 @@ namespace Todo.Controllers
             {
                 return NotFound();
             }
-            return Ok(TodoTask.FromDAL(todoTask, getBaseUri()));
+            return Ok(TodoTask.FromDAL(todoTask, GetBaseUri()));
         }
 
         [HttpPost]
         public IActionResult CreateTodoTask(TodoTaskData todoTaskToCreate)
         {
             _TodoRepository.Add(todoTaskToCreate);
-            var todoTask = TodoTask.FromDAL(todoTaskToCreate, getBaseUri());
+            var todoTask = TodoTask.FromDAL(todoTaskToCreate, GetBaseUri());
             return CreatedAtRoute("GetTodoTask", new { id = todoTask.Id }, todoTask);
         }
 
@@ -81,10 +81,10 @@ namespace Todo.Controllers
             todoTaskToUpdate.Order = todoTask.Order;
             todoTaskToUpdate.Completed = todoTask.Completed;
             _TodoRepository.Update(todoTaskToUpdate);
-            return Ok(TodoTask.FromDAL(todoTaskToUpdate, getBaseUri()));
+            return Ok(TodoTask.FromDAL(todoTaskToUpdate, GetBaseUri()));
         }
 
-        private string getBaseUri()
+        private string GetBaseUri()
         {
             var request = HttpContext.Request;
             var scheme = request.Scheme;
