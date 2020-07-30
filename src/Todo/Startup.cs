@@ -7,9 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Text.Json;
-using Todo.DAL;
 using Todo.Interfaces;
-using Todo.Service;
 
 namespace Todo
 {
@@ -30,7 +28,6 @@ namespace Todo
             });
 
             services.AddScoped<ITodoTaskRepository, TodoTaskRepository>();
-
             services.AddDbContext<TodoTaskContext>(opt =>
                 opt.UseInMemoryDatabase("TodoDB"));
 

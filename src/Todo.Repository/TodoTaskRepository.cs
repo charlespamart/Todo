@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Todo.DAL;
-using Todo.Domain.Models;
-using Todo.Interfaces;
+using Todo.DAL.Models;
+using Todo.Repository.Interfaces;
 
 namespace Todo.Service
 {
@@ -15,9 +16,9 @@ namespace Todo.Service
             _dbContext = dbContext;
         }
 
-        public TodoTaskData[]  GetTodoTasks()
+        public List<TodoTaskData>  GetTodoTasks()
         {
-            return _dbContext.TodoTasks.ToArray();
+            return _dbContext.TodoTasks.ToList();
         }
         public TodoTaskData GetTodoTask(Guid id)
         {

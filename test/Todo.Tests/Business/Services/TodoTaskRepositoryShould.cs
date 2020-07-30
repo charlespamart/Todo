@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Todo.Tests.Services
 {
-    public class TodoRepositoryShould
+    public class TodoTaskRepositoryShould
     {
         [Fact]
         public void GetAllTodoTasks()
@@ -119,8 +119,8 @@ namespace Todo.Tests.Services
 
             Context.TodoTasks.Add(new TodoTaskData() { Title = "Never gonna give you up", Completed = false, Order = 0 });
             Context.TodoTasks.Add(new TodoTaskData() { Title = "Never gonna let you down", Completed = false, Order = 1 });
-            Context.TodoTasks.Add(new TodoTaskData() { Title = "Never gonna turn around", Completed = false, Order = 2 });
-            Context.TodoTasks.Add(new TodoTaskData() { Title = "And hurt you", Completed = false, Order = 3 });
+            Context.TodoTasks.Add(new TodoTaskData() { Title = "Never gonna run around and desert you", Completed = false, Order = 2 });
+            Context.TodoTasks.Add(new TodoTaskData() { Title = "Never gonna make you cry", Completed = false, Order = 3 });
             Context.TodoTasks.Add(new TodoTaskData() { Id = Guid.Parse("ac7ef91f-221e-4d9c-868d-c65a3ffc92c8"), Title = "Gravé dans la roche", Completed = false, Order = 4 });
 
             Context.SaveChanges();

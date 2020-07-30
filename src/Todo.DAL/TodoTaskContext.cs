@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Todo.Domain.Models;
+using Todo.DAL.Models;
 
 namespace Todo.DAL
 {

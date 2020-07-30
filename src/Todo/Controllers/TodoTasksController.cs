@@ -3,9 +3,6 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
-using Todo.API.Models;
-using Todo.Domain.Models;
-using Todo.Interfaces;
 
 namespace Todo.Controllers
 {
@@ -16,9 +13,8 @@ namespace Todo.Controllers
         private readonly ILogger<TodoTasksController> _logger;
         private readonly ITodoTaskRepository _TodoRepository;
 
-        public TodoTasksController(ILogger<TodoTasksController> logger, ITodoTaskRepository TodoRepository)
+        public TodoTasksController(ITodoTaskRepository TodoRepository)
         {
-            _logger = logger;
             _TodoRepository = TodoRepository;
         }
 
@@ -28,7 +24,8 @@ namespace Todo.Controllers
             var todoTasks = _TodoRepository.GetTodoTasks();
             var uri = GetBaseUri();
 
-            return Ok(todoTasks.Select(todoTask => TodoTask.FromDAL(todoTask, uri)));
+
+            return Ok(todoTasks.Select(todoTask => TodoTaskView.FromDAL(todoTask, uri)));
         }
 
         [HttpGet("{id}", Name = "GetTodoTask")]
@@ -39,14 +36,14 @@ namespace Todo.Controllers
             {
                 return NotFound();
             }
-            return Ok(TodoTask.FromDAL(todoTask, GetBaseUri()));
+            return Ok(TodoTaskView.FromDAL(todoTask, GetBaseUri()));
         }
 
         [HttpPost]
         public IActionResult CreateTodoTask(TodoTaskData todoTaskToCreate)
         {
             _TodoRepository.Add(todoTaskToCreate);
-            var todoTask = TodoTask.FromDAL(todoTaskToCreate, GetBaseUri());
+            var todoTask = TodoTaskView.FromDAL(todoTaskToCreate, GetBaseUri());
             return CreatedAtRoute("GetTodoTask", new { id = todoTask.Id }, todoTask);
         }
 
@@ -81,7 +78,7 @@ namespace Todo.Controllers
             todoTaskToUpdate.Order = todoTask.Order;
             todoTaskToUpdate.Completed = todoTask.Completed;
             _TodoRepository.Update(todoTaskToUpdate);
-            return Ok(TodoTask.FromDAL(todoTaskToUpdate, GetBaseUri()));
+            return Ok(TodoTaskView.FromDAL(todoTaskToUpdate, GetBaseUri()));
         }
 
         private string GetBaseUri()

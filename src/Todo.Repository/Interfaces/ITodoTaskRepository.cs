@@ -1,11 +1,12 @@
 ﻿using System;
-using Todo.Domain.Models;
+using System.Collections.Generic;
+using Todo.DAL.Models;
 
-namespace Todo.Interfaces
+namespace Todo.Repository.Interfaces
 {
     public interface ITodoTaskRepository
     {
-        TodoTaskData[] GetTodoTasks();
+        List<TodoTaskData> GetTodoTasks();
         TodoTaskData GetTodoTask(Guid id);
         void Add(TodoTaskData TodoTask);
         void Remove(TodoTaskData todoTask);

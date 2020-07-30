@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 
-namespace Todo.Domain.Models
+namespace Todo.DAL.Models
 {
     public class TodoTaskData : IEquatable<TodoTaskData>
     {
