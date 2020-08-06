@@ -7,7 +7,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Text.Json;
-using Todo.Interfaces;
+using Todo.DAL;
+using Todo.Domain;
+using Todo.Domain.Interfaces;
 
 namespace Todo
 {
@@ -23,13 +25,15 @@ namespace Todo
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddJsonOptions(options => {
+            services.AddControllers().AddNewtonsoftJson().AddJsonOptions(options => {
                 options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             });
 
             services.AddScoped<ITodoTaskRepository, TodoTaskRepository>();
+            services.AddScoped<ITodoTaskService, TodoTaskService>();
+
             services.AddDbContext<TodoTaskContext>(opt =>
-                opt.UseInMemoryDatabase("TodoDB"));
+                opt.UseInMemoryDatabase("TodoTaskDB"));
 
             services.AddCors(options =>
             {

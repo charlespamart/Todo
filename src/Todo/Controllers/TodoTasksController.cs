@@ -1,94 +1,129 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
+using Todo.API.Models;
+using Todo.Domain.Interfaces;
+using Todo.Domain.Models;
 
-namespace Todo.Controllers
+namespace Todo.API.Controllers
 {
     [ApiController]
-    [Route("TodoTasks")]
+    [Route(ControllerName)]
     public class TodoTasksController : ControllerBase
     {
-        private readonly ILogger<TodoTasksController> _logger;
-        private readonly ITodoTaskRepository _TodoRepository;
+        private readonly ITodoTaskService _todoTaskService;
+        private readonly LinkGenerator _linkGenerator;
+        private const string ControllerName = "todotasks";
 
-        public TodoTasksController(ITodoTaskRepository TodoRepository)
+        public TodoTasksController(ITodoTaskService todoTaskService, LinkGenerator linkGenerator)
         {
-            _TodoRepository = TodoRepository;
+            _todoTaskService = todoTaskService;
+            _linkGenerator = linkGenerator;
         }
 
         [HttpGet]
-        public IActionResult GetTodoTasks()
+        [ActionName(nameof(GetAllAsync))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllAsync()
         {
-            var todoTasks = _TodoRepository.GetTodoTasks();
-            var uri = GetBaseUri();
-
-
-            return Ok(todoTasks.Select(todoTask => TodoTaskView.FromDAL(todoTask, uri)));
+            var todoTasks = await _todoTaskService.GetTodoTasksAsync();
+            return Ok(todoTasks.Select(todoTask => TodoTaskView.FromDomain(todoTask, GetResourceUri(todoTask.Id))));
         }
 
-        [HttpGet("{id}", Name = "GetTodoTask")]
-        public IActionResult GetTodoTask(Guid id)
+        [HttpGet("{id:guid}")]
+        [ActionName(nameof(GetByIdAsync))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetByIdAsync(Guid id)
         {
-            var todoTask = _TodoRepository.GetTodoTask(id);
+            var todoTask = await _todoTaskService.GetTodoTaskAsync(id);
             if (todoTask == null)
             {
                 return NotFound();
             }
-            return Ok(TodoTaskView.FromDAL(todoTask, GetBaseUri()));
+            return Ok(TodoTaskView.FromDomain(todoTask, GetResourceUri(todoTask.Id)));
         }
 
         [HttpPost]
-        public IActionResult CreateTodoTask(TodoTaskData todoTaskToCreate)
+        [ActionName(nameof(CreateAsync))]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CreateAsync(TodoTaskCreate todoTaskCreate)
         {
-            _TodoRepository.Add(todoTaskToCreate);
-            var todoTask = TodoTaskView.FromDAL(todoTaskToCreate, GetBaseUri());
-            return CreatedAtRoute("GetTodoTask", new { id = todoTask.Id }, todoTask);
+            var todoTaskAdd = await _todoTaskService.AddAsync(todoTaskCreate.Title, todoTaskCreate.Order);
+
+            if(todoTaskAdd.Title == null)
+            {
+                return BadRequest();
+            }
+            return CreatedAtAction(nameof(GetByIdAsync), new { id = todoTaskAdd.Id }, TodoTaskView.FromDomain(todoTaskAdd, GetResourceUri(todoTaskAdd.Id)));
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult RemoveTodoTask(Guid id)
+        [HttpDelete("{id:guid}")]
+        [ActionName(nameof(RemoveByIdAsync))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> RemoveByIdAsync(Guid id)
         {
-            var todoTask = _TodoRepository.GetTodoTask(id);
-            if (todoTask == null)
+            if ( await _todoTaskService.RemoveAsync(id))
             {
-                return NotFound();
+                return NoContent();
             }
-            _TodoRepository.Remove(todoTask);
-            return NoContent();
+            return Conflict();
         }
 
         [HttpDelete]
-        public IActionResult RemoveTodoTasks()
+        [ActionName(nameof(ClearAsync))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> ClearAsync()
         {
-            _TodoRepository.Clear();
+            await _todoTaskService.ClearAsync();
             return NoContent();
         }
 
-        [HttpPatch("{id}")]
-        public IActionResult UpdateTodoTask(Guid id, TodoTaskData todoTask)
+        [HttpPut("{id:guid}")]
+        [ActionName(nameof(PutAsync))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> PutAsync(Guid id, TodoTaskUpdate todoTaskPut)
         {
-            var todoTaskToUpdate = _TodoRepository.GetTodoTask(id);
-            if (todoTaskToUpdate == null)
+            if (todoTaskPut.Title == null || !todoTaskPut.Completed.HasValue || !todoTaskPut.Order.HasValue)
+            {
+                return BadRequest();
+            }
+
+            var todoTaskUpdated = await _todoTaskService.UpdateAsync(id, todoTaskPut.Title, todoTaskPut.Completed.Value, todoTaskPut.Order.Value);
+
+            if (todoTaskUpdated == null)
             {
                 return NotFound();
             }
-            todoTaskToUpdate.Title = todoTask.Title;
-            todoTaskToUpdate.Order = todoTask.Order;
-            todoTaskToUpdate.Completed = todoTask.Completed;
-            _TodoRepository.Update(todoTaskToUpdate);
-            return Ok(TodoTaskView.FromDAL(todoTaskToUpdate, GetBaseUri()));
+            return Ok(TodoTaskView.FromDomain(todoTaskUpdated, GetResourceUri(todoTaskUpdated.Id)));
         }
 
-        private string GetBaseUri()
+        [HttpPatch("{id:guid}")]
+        [ActionName(nameof(PatchAsync))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> PatchAsync(Guid id, TodoTaskUpdate todoTaskPatch)
         {
-            var request = HttpContext.Request;
-            var scheme = request.Scheme;
-            var host = request.Host.ToUriComponent();
-            var pathBase = request.PathBase.ToUriComponent();
+            var todoTaskUpdated = await _todoTaskService.UpdateAsync(id, todoTaskPatch.Title, todoTaskPatch.Completed, todoTaskPatch.Order);
 
-            return $"{scheme}://{host}{pathBase}/todotasks/";
+            if (todoTaskUpdated == null)
+            {
+                return NotFound();
+            }
+            return Ok(TodoTaskView.FromDomain(todoTaskUpdated, GetResourceUri(todoTaskUpdated.Id)));
+        }
+
+        [NonAction]
+        private Uri GetResourceUri(Guid id)
+        {
+            return new Uri(_linkGenerator.GetUriByAction(HttpContext, nameof(GetByIdAsync), ControllerName, new { id }));
         }
     }
 }

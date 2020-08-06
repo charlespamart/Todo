@@ -1,42 +1,28 @@
 ﻿using System;
-using Todo.Business.Models;
+using Todo.Domain.Models;
 
 namespace Todo.API.Models
 {
-    public class TodoTaskView: IEquatable<TodoTaskView>
+    public class TodoTaskView
     {
-        public static TodoTaskView FromBusiness(TodoTask todoTaskView, string path)
-        {
-            return new TodoTaskView(todoTaskView, path);
-        }
-
-        public TodoTaskView(TodoTask todoTaskView, string path)
-        {
-            Id = todoTaskView.Id;
-            Title = todoTaskView.Title;
-            Completed = todoTaskView.Completed;
-            Order = todoTaskView.Order;
-            Url = new Uri(path + Id);
-        }
         public Guid Id { get; }
-        public string Title { get;}
-        public bool Completed { get;}
-        public int Order { get;}
-        public Uri Url { get;}
+        public string Title { get; }
+        public bool Completed { get; }
+        public int Order { get; }
+        public Uri Url { get; }
 
-        public override bool Equals(object obj)
+        public static TodoTaskView FromDomain(TodoTask todoTask, Uri path)
         {
-            return base.Equals(obj);
+            return new TodoTaskView(todoTask, path);
         }
 
-        public bool Equals(TodoTaskView todoTaskView)
+        public TodoTaskView(TodoTask todoTask, Uri path)
         {
-            return todoTaskView != null && Id == todoTaskView.Id && Title == todoTaskView.Title && Completed == todoTaskView.Completed && Order == todoTaskView.Order;
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
+            Id = todoTask.Id;
+            Title = todoTask.Title;
+            Completed = todoTask.Completed;
+            Order = todoTask.Order;
+            Url = path;
         }
     }
 

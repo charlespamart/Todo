@@ -1,39 +1,35 @@
 ﻿using System;
-using Todo.DAL.Models;
+using System.Diagnostics.CodeAnalysis;
 
-namespace Todo.Business.Models
+namespace Todo.Domain.Models
 {
-    public class TodoTask : IEquatable<TodoTask>
+    public class TodoTask
     {
-        public static TodoTask FromDAL(TodoTaskData todoTaskData)
-        {
-            return new TodoTask(todoTaskData);
-        }
+        public Guid Id { get; }
+        public string Title { get; }
+        public bool Completed { get; }
+        public int Order { get; }
 
-        public TodoTask(TodoTaskData todoTaskData)
+        public TodoTask(Guid id, string title, bool completed, int order)
         {
-            Id = todoTaskData.Id;
-            Title = todoTaskData.Title;
-            Order = todoTaskData.Order;
+            Id = id;
+            Title = title;
+            Completed = completed;
+            Order = order;
         }
-        public Guid Id { get; set; }
-        public string Title { get; set; }
-        public bool Completed { get; set; }
-        public int Order { get; set; }
 
         public override bool Equals(object obj)
         {
-            return base.Equals(obj);
-        }
-
-        public bool Equals(TodoTask todoTask)
-        {
-            return todoTask != null && Id == todoTask.Id && Title == todoTask.Title && Completed == todoTask.Completed && Order == todoTask.Order;
+            return obj is TodoTask task &&
+                   Id.Equals(task.Id) &&
+                   Title == task.Title &&
+                   Completed == task.Completed &&
+                   Order == task.Order;
         }
 
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            return HashCode.Combine(Id, Title, Completed, Order);
         }
     }
 }

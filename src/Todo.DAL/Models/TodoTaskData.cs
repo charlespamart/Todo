@@ -1,27 +1,22 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Todo.Domain.Models;
 
 namespace Todo.DAL.Models
 {
-    public class TodoTaskData : IEquatable<TodoTaskData>
+    public class TodoTaskData
     {
-        public Guid Id{ get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
         public string Title { get; set; }
         public bool Completed { get; set; }
         public int Order { get; set; }
 
-        public override bool Equals(object obj)
+        public TodoTask ToDomain()
         {
-            return base.Equals(obj);
-        }
-
-        public bool Equals(TodoTaskData todoTaskData)
-        {
-            return todoTaskData != null && Id == todoTaskData.Id && Title == todoTaskData.Title && Completed == todoTaskData.Completed && Order == todoTaskData.Order;
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
+            return new TodoTask(Id, Title, Completed, Order);
         }
     }
 }
