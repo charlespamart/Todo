@@ -45,6 +45,8 @@ namespace Todo
                                   builder.AllowAnyHeader();
                               });
             });
+
+            services.AddSwaggerDocument();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, TodoTaskContext todoContext)
@@ -53,6 +55,9 @@ namespace Todo
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
 
             app.UseHttpsRedirection();
 
