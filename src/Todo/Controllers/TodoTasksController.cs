@@ -102,7 +102,7 @@ namespace Todo.API.Controllers
             {
                 return NotFound();
             }
-            return Ok(TodoTaskView.FromDomain(todoTaskUpdated, GetResourceUri(todoTaskUpdated.Id)));
+            return AcceptedAtAction(nameof(PutAsync), new { id = todoTaskUpdated.Id }, TodoTaskView.FromDomain(todoTaskUpdated, GetResourceUri(todoTaskUpdated.Id)));
         }
 
         [HttpPatch("{id:guid}")]
@@ -117,7 +117,7 @@ namespace Todo.API.Controllers
             {
                 return NotFound();
             }
-            return Ok(TodoTaskView.FromDomain(todoTaskUpdated, GetResourceUri(todoTaskUpdated.Id)));
+            return AcceptedAtAction(nameof(PatchAsync), new { id = todoTaskUpdated.Id }, TodoTaskView.FromDomain(todoTaskUpdated, GetResourceUri(todoTaskUpdated.Id)));
         }
 
         [NonAction]

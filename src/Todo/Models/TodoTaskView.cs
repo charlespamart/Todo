@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Todo.Domain.Models;
 
 namespace Todo.API.Models
@@ -23,6 +24,21 @@ namespace Todo.API.Models
             Completed = todoTask.Completed;
             Order = todoTask.Order;
             Url = path;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is TodoTaskView view &&
+                   Id.Equals(view.Id) &&
+                   Title == view.Title &&
+                   Completed == view.Completed &&
+                   Order == view.Order &&
+                   EqualityComparer<Uri>.Default.Equals(Url, view.Url);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Title, Completed, Order, Url);
         }
     }
 
