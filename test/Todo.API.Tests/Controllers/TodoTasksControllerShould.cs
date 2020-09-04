@@ -19,7 +19,12 @@ namespace Todo.API.Tests.Controllers
     {
         private const string DefaultBaseUri = "https://arandomurl";
 
-        private readonly List<Guid> guids;
+        static private readonly IImmutableList<Guid> _Guids = new List<Guid>() {
+            new Guid("00000000-0000-0000-0000-000000000001"), 
+            new Guid("00000000-0000-0000-0000-000000000002"),
+            new Guid("00000000-0000-0000-0000-000000000003"),
+            new Guid("00000000-0000-0000-0000-000000000004")
+        }.ToImmutableList();
 
         private readonly Mock<ITodoTaskService> _mockTodoTaskService;
 
@@ -29,19 +34,12 @@ namespace Todo.API.Tests.Controllers
 
         public TodoTasksControllerShould()
         {
-            guids = new List<Guid>();
-
-            guids.Add(new Guid("00000000-0000-0000-0000-000000000001"));
-            guids.Add(new Guid("00000000-0000-0000-0000-000000000002"));
-            guids.Add(new Guid("00000000-0000-0000-0000-000000000003"));
-            guids.Add(new Guid("00000000-0000-0000-0000-000000000004"));
-
             todoTasks = new List<TodoTask>
             {
-                new TodoTask(guids[0], "Le gras, c'est la vie", true, 0),
-                new TodoTask(guids[1], "C'est pas faux", false, 1),
-                new TodoTask(guids[2], "Moi j'ai appris à lire, ben je souhaite ça à personne", true, 2),
-                new TodoTask(guids[3], "Les mômes maintenant, ils lisent, ils lisent, ils lisent et résultat...ils sont encore puceaux à 10 ans...", false, 3),
+                new TodoTask(_Guids[0], "Le gras, c'est la vie", true, 0),
+                new TodoTask(_Guids[1], "C'est pas faux", false, 1),
+                new TodoTask(_Guids[2], "Moi j'ai appris à lire, ben je souhaite ça à personne", true, 2),
+                new TodoTask(_Guids[3], "Les mômes maintenant, ils lisent, ils lisent, ils lisent et résultat...ils sont encore puceaux à 10 ans...", false, 3),
             };
 
             _mockTodoTaskService = new Mock<ITodoTaskService>();
@@ -90,7 +88,7 @@ namespace Todo.API.Tests.Controllers
         [Fact]
         public async Task BeAbleToGetATodoTaskByIdAsync()
         {
-            var guid = guids[0];
+            var guid = _Guids.First();
 
             var expected = TodoTaskView.FromDomain(todoTasks.Single(x => x.Id == guid), new Uri($"{DefaultBaseUri}/{guid}"));
 
@@ -105,9 +103,9 @@ namespace Todo.API.Tests.Controllers
         [Fact]
         public async Task ReturnNullOnNonExistingTodoTaskByIdAsync()
         {
-            _mockTodoTaskService.Setup(x => x.GetTodoTaskAsync(guids[0])).ReturnsAsync((TodoTask)null);
+            _mockTodoTaskService.Setup(x => x.GetTodoTaskAsync(_Guids[0])).ReturnsAsync((TodoTask)null);
 
-            var actual = await _todoTaskController.GetByIdAsync(guids[0]);
+            var actual = await _todoTaskController.GetByIdAsync(_Guids[0]);
 
             Assert.IsType<NotFoundResult>(actual);
         }
@@ -115,7 +113,7 @@ namespace Todo.API.Tests.Controllers
         [Fact]
         public async Task BeAbleToCreateANewTodoTaskAsync()
         {
-            var guid = guids[1];
+            var guid = _Guids[1];
 
             var expected = TodoTaskView.FromDomain(todoTasks.Single(x => x.Id == guid), new Uri($"{DefaultBaseUri}/{guid}"));
 
@@ -132,7 +130,7 @@ namespace Todo.API.Tests.Controllers
         [Fact]
         public async Task BeAbleToPutTodoTaskAsync()
         {
-            var guid = guids[2];
+            var guid = _Guids[2];
 
             var todoTaskUpdate = new TodoTaskUpdate
             {
@@ -160,7 +158,7 @@ namespace Todo.API.Tests.Controllers
                 Order = 5
             };
 
-            var actual = await _todoTaskController.PutAsync(guids[2], todoTaskUpdate);
+            var actual = await _todoTaskController.PutAsync(_Guids[2], todoTaskUpdate);
 
             Assert.IsType<BadRequestResult>(actual);
         }
@@ -183,7 +181,7 @@ namespace Todo.API.Tests.Controllers
         [Fact]
         public async Task BeAbleToPatchAsync()
         {
-            var guid = guids[2];
+            var guid = _Guids[2];
             var title = "Pour savoir s'y a du vent, il faut mettre son doigt dans le cul du coq";
             var completed = true;
             var order = 2;
@@ -238,7 +236,7 @@ namespace Todo.API.Tests.Controllers
         [Fact]
         public async Task BeAbleToRemoveByIdAsync()
         {
-            var guid = guids[3];
+            var guid = _Guids[3];
 
             _mockTodoTaskService.Setup(x => x.RemoveAsync(guid)).ReturnsAsync(true);
 
@@ -250,7 +248,7 @@ namespace Todo.API.Tests.Controllers
         [Fact]
         public async Task NotBeAbleToRemoveNonExistingTodoTaskByIdAsync()
         {
-            var guid = guids[3];
+            var guid = _Guids[3];
 
             _mockTodoTaskService.Setup(x => x.RemoveAsync(guid)).ReturnsAsync(false);
 

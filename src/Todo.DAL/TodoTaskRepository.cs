@@ -49,8 +49,13 @@ namespace Todo.DAL
 
         public async Task<bool> RemoveAsync(Guid id)
         {
-            //var todoTaskData = new TodoTaskData { Id = id };
             var todoTaskData = await _dbContext.TodoTasks.SingleOrDefaultAsync(x => x.Id == id);
+
+            if (todoTaskData == null)
+            {
+                return false;
+            }
+
             try
             {
                 _dbContext.TodoTasks.Remove(todoTaskData);

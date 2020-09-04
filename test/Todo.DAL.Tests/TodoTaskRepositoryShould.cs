@@ -15,9 +15,9 @@ namespace Todo.DAL.Tests
         [Fact]
         public async Task GetAllTodoTasks()
         {
-            var options = createInMemoryDB(nameof(GetAllTodoTasks));
+            var options = CreateInMemoryDB(nameof(GetAllTodoTasks));
 
-            using var fixture = new TodoContextFixture(new TodoTaskContext(options));
+            await using var fixture = new TodoContextFixture(new TodoTaskContext(options));
             var repository = new TodoTaskRepository(fixture.Context);
 
             var result = await repository.GetTodoTasksAsync();
@@ -28,9 +28,9 @@ namespace Todo.DAL.Tests
         [Fact]
         public async Task ReturnAnEmptyCollectionAfterClear()
         {
-            var options = createInMemoryDB(nameof(ReturnAnEmptyCollectionAfterClear));
+            var options = CreateInMemoryDB(nameof(ReturnAnEmptyCollectionAfterClear));
 
-            using var fixture = new TodoContextFixture(new TodoTaskContext(options));
+            await using var fixture = new TodoContextFixture(new TodoTaskContext(options));
             var repository = new TodoTaskRepository(fixture.Context);
 
             await repository.ClearAsync();
@@ -42,9 +42,9 @@ namespace Todo.DAL.Tests
         [Fact]
         public async Task GetATodoTaskById()
         {
-            var options = createInMemoryDB(nameof(GetATodoTaskById));
+            var options = CreateInMemoryDB(nameof(GetATodoTaskById));
 
-            using var fixture = new TodoContextFixture(new TodoTaskContext(options));
+            await using var fixture = new TodoContextFixture(new TodoTaskContext(options));
             var repository = new TodoTaskRepository(fixture.Context);
 
             var expected = new TodoTask(id, "Never gonna say goodbye", false, 4);
@@ -57,9 +57,9 @@ namespace Todo.DAL.Tests
         [Fact]
         public async Task ReturnNullIfTheTodoTaskIsNotFoundWhenCallingGetTodoTaskAsync()
         {
-            var options = createInMemoryDB(nameof(ReturnNullIfTheTodoTaskIsNotFoundWhenCallingGetTodoTaskAsync));
+            var options = CreateInMemoryDB(nameof(ReturnNullIfTheTodoTaskIsNotFoundWhenCallingGetTodoTaskAsync));
 
-            using var fixture = new TodoContextFixture(new TodoTaskContext(options));
+            await using var fixture = new TodoContextFixture(new TodoTaskContext(options));
             var repository = new TodoTaskRepository(fixture.Context);
 
             var expected = new TodoTask(id, "Never gonna say goodbye", false, 4);
@@ -72,9 +72,9 @@ namespace Todo.DAL.Tests
         [Fact]
         public async Task AddATodoTaskAndReturnTheAddedTodoTask()
         {
-            var options = createInMemoryDB(nameof(AddATodoTaskAndReturnTheAddedTodoTask));
+            var options = CreateInMemoryDB(nameof(AddATodoTaskAndReturnTheAddedTodoTask));
 
-            using var fixture = new TodoContextFixture(new TodoTaskContext(options));
+            await using var fixture = new TodoContextFixture(new TodoTaskContext(options));
             var repository = new TodoTaskRepository(fixture.Context);
 
             const string title = "Never gonna say goodbye";
@@ -93,9 +93,9 @@ namespace Todo.DAL.Tests
         [Fact]
         public async Task ClearAllTodoTasks()
         {
-            var options = createInMemoryDB(nameof(ClearAllTodoTasks));
+            var options = CreateInMemoryDB(nameof(ClearAllTodoTasks));
 
-            using var fixture = new TodoContextFixture(new TodoTaskContext(options));
+            await using var fixture = new TodoContextFixture(new TodoTaskContext(options));
             var repository = new TodoTaskRepository(fixture.Context);
 
             await repository.ClearAsync();
@@ -108,9 +108,9 @@ namespace Todo.DAL.Tests
         [Fact]
         public async Task ReturnTrueWhenTodoTaskIsSuccesfullyRemoved()
         {
-            var options = createInMemoryDB(nameof(ReturnTrueWhenTodoTaskIsSuccesfullyRemoved));
+            var options = CreateInMemoryDB(nameof(ReturnTrueWhenTodoTaskIsSuccesfullyRemoved));
 
-            using var fixture = new TodoContextFixture(new TodoTaskContext(options));
+            await using var fixture = new TodoContextFixture(new TodoTaskContext(options));
             var repository = new TodoTaskRepository(fixture.Context);
 
             var result = await repository.RemoveAsync(id);
@@ -121,22 +121,22 @@ namespace Todo.DAL.Tests
         [Fact]
         public async Task ReturnFalseWhenTodoTaskCannotBeRemoved()
         {
-            var options = createInMemoryDB(nameof(ReturnFalseWhenTodoTaskCannotBeRemoved));
+            var options = CreateInMemoryDB(nameof(ReturnFalseWhenTodoTaskCannotBeRemoved));
 
-            using var fixture = new TodoContextFixture(new TodoTaskContext(options));
+            await using var fixture = new TodoContextFixture(new TodoTaskContext(options));
             var repository = new TodoTaskRepository(fixture.Context);
 
-            var result = await repository.RemoveAsync(id);
+            var result = await repository.RemoveAsync(Guid.NewGuid());
 
-            Assert.True(result);
+            Assert.False(result);
         }
 
         [Fact]
         public async Task UpdateTodoTaskAndReturnUpdatedTodoTask()
         {
-            var options = createInMemoryDB(nameof(UpdateTodoTaskAndReturnUpdatedTodoTask));
+            var options = CreateInMemoryDB(nameof(UpdateTodoTaskAndReturnUpdatedTodoTask));
 
-            using var fixture = new TodoContextFixture(new TodoTaskContext(options));
+            await using var fixture = new TodoContextFixture(new TodoTaskContext(options));
             var repository = new TodoTaskRepository(fixture.Context);
 
             var newBoolean = true;
@@ -153,9 +153,9 @@ namespace Todo.DAL.Tests
         [Fact]
         public async Task ReturnNullIfTheTodoTaskIsNotFoundwhenCallingUpdate()
         {
-            var options = createInMemoryDB(nameof(ReturnNullIfTheTodoTaskIsNotFoundwhenCallingUpdate));
+            var options = CreateInMemoryDB(nameof(ReturnNullIfTheTodoTaskIsNotFoundwhenCallingUpdate));
 
-            using var fixture = new TodoContextFixture(new TodoTaskContext(options));
+            await using var fixture = new TodoContextFixture(new TodoTaskContext(options));
             var repository = new TodoTaskRepository(fixture.Context);
 
             var result = await repository.GetTodoTaskAsync(Guid.NewGuid());
@@ -163,14 +163,14 @@ namespace Todo.DAL.Tests
             Assert.Null(result);
         }
 
-        private DbContextOptions<TodoTaskContext> createInMemoryDB(string dbName)
+        private DbContextOptions<TodoTaskContext> CreateInMemoryDB(string dbName)
         {
             return new DbContextOptionsBuilder<TodoTaskContext>()
-                .UseInMemoryDatabase(databaseName: nameof(GetAllTodoTasks))
+                .UseInMemoryDatabase(databaseName: dbName)
                 .Options;
         }
     }
-    class TodoContextFixture : IDisposable
+    class TodoContextFixture : IAsyncDisposable
     {
         public TodoTaskContext Context { get; }
 
@@ -194,10 +194,9 @@ namespace Todo.DAL.Tests
             Context.SaveChanges();
         }
 
-
-        public void Dispose()
+        public async ValueTask DisposeAsync()
         {
-            Context.Database.EnsureDeleted();
+            await Context.Database.EnsureDeletedAsync();
         }
     }
 }
