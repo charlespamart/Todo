@@ -47,7 +47,7 @@ namespace Todo.DAL.Tests
             await using var fixture = new TodoContextFixture(new TodoTaskContext(options));
             var repository = new TodoTaskRepository(fixture.Context);
 
-            var expected = new TodoTask(id, "Never gonna say goodbye", false, 4);
+            var expected = new TodoTask(id, "Todotask", false, 4);
 
             var result = await repository.GetByIdAsync(id);
 
@@ -62,7 +62,7 @@ namespace Todo.DAL.Tests
             await using var fixture = new TodoContextFixture(new TodoTaskContext(options));
             var repository = new TodoTaskRepository(fixture.Context);
 
-            var expected = new TodoTask(id, "Never gonna say goodbye", false, 4);
+            var expected = new TodoTask(id, "Todotask", false, 4);
 
             var result = await repository.GetByIdAsync(Guid.NewGuid());
 
@@ -77,7 +77,7 @@ namespace Todo.DAL.Tests
             await using var fixture = new TodoContextFixture(new TodoTaskContext(options));
             var repository = new TodoTaskRepository(fixture.Context);
 
-            const string title = "Never gonna say goodbye";
+            const string title = "Todotask";
             const int order = 4;
             var returnValue = await repository.AddAsync(title, order);
 
@@ -140,7 +140,7 @@ namespace Todo.DAL.Tests
             var repository = new TodoTaskRepository(fixture.Context);
 
             var newBoolean = true;
-            var newTitle = "https://www.youtube.com/watch?v=hq6BF8qoauM";
+            var newTitle = "Title";
             var newOrder = 15;
 
             var result = await repository.UpdateAsync(id, newTitle, newBoolean, newOrder);
@@ -185,11 +185,11 @@ namespace Todo.DAL.Tests
             Context.Database.EnsureDeleted();
             Context.Database.EnsureCreated();
 
-            Context.TodoTasks.Add(new TodoTaskData() { Title = "Never gonna give you up", Completed = false, Order = 0 });
-            Context.TodoTasks.Add(new TodoTaskData() { Title = "Never gonna let you down", Completed = false, Order = 1 });
-            Context.TodoTasks.Add(new TodoTaskData() { Title = "Never gonna run around and desert you", Completed = false, Order = 2 });
-            Context.TodoTasks.Add(new TodoTaskData() { Title = "Never gonna make you cry", Completed = false, Order = 3 });
-            Context.TodoTasks.Add(new TodoTaskData() { Id = TodoTaskRepositoryShould.id, Title = "Never gonna say goodbye", Completed = false, Order = 4 });
+            Context.TodoTasks.Add(new TodoTaskData() { Title = "TodotaskData 0", Completed = false, Order = 0 });
+            Context.TodoTasks.Add(new TodoTaskData() { Title = "TodotaskData 1", Completed = false, Order = 1 });
+            Context.TodoTasks.Add(new TodoTaskData() { Title = "TodotaskData 2", Completed = false, Order = 2 });
+            Context.TodoTasks.Add(new TodoTaskData() { Title = "TodotaskData 3", Completed = false, Order = 3 });
+            Context.TodoTasks.Add(new TodoTaskData() { Id = TodoTaskRepositoryShould.id, Title = "Todotask", Completed = false, Order = 4 });
 
             Context.SaveChanges();
         }

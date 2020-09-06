@@ -36,10 +36,10 @@ namespace Todo.API.Tests.Controllers
         {
             todoTasks = new List<TodoTask>
             {
-                new TodoTask(_Guids[0], "Le gras, c'est la vie", true, 0),
-                new TodoTask(_Guids[1], "C'est pas faux", false, 1),
-                new TodoTask(_Guids[2], "Moi j'ai appris à lire, ben je souhaite ça à personne", true, 2),
-                new TodoTask(_Guids[3], "Les mômes maintenant, ils lisent, ils lisent, ils lisent et résultat...ils sont encore puceaux à 10 ans...", false, 3),
+                new TodoTask(_Guids[0], "Todotask 0", true, 0),
+                new TodoTask(_Guids[1], "Todotask 1", false, 1),
+                new TodoTask(_Guids[2], "Todotask 2", true, 2),
+                new TodoTask(_Guids[3], "Todotask 3", false, 3),
             };
 
             _mockTodoTaskService = new Mock<ITodoTaskService>();
@@ -125,7 +125,7 @@ namespace Todo.API.Tests.Controllers
         public async Task BeAbleToCreateANewTodoTaskAsync()
         {
             var guid = _Guids.First();
-            var title = "C'est pas faux";
+            var title = "Todotask 1";
             var order = 1;
 
             var expected = TodoTaskView.FromDomain(todoTasks.Single(x => x.Id == guid), new Uri($"{DefaultBaseUri}/{guid}"));
@@ -147,7 +147,7 @@ namespace Todo.API.Tests.Controllers
         public async Task BeAbleToPutTodoTaskAsync()
         {
             var guid = _Guids.First();
-            var title = "De quoi?!";
+            var title = "Todotask";
             var completed = true;
             var order = 5;
 
@@ -197,7 +197,7 @@ namespace Todo.API.Tests.Controllers
         public async Task ReturnNotFoundOnNonExistingTodoTaskWhenCallingPutAsync()
         {
             var guid = Guid.NewGuid();
-            var title = "De quoi?!";
+            var title = "Todotask";
             var completed = true;
             var order = 5;
 
@@ -220,7 +220,7 @@ namespace Todo.API.Tests.Controllers
         public async Task BeAbleToPatchAsync()
         {
             var guid = _Guids.First();
-            var title = "Pour savoir s'y a du vent, il faut mettre son doigt dans le cul du coq";
+            var title = "Todotask";
             var completed = true;
             var order = 2;
 
@@ -255,15 +255,15 @@ namespace Todo.API.Tests.Controllers
         public async Task ReturnNotFoundOnNonExistingTodoTaskWhileCallingPatchAsync()
         {
             var guid = Guid.NewGuid();
-            var title = "Mais vous êtes pas un peu marteau vous ?";
+            var title = "Todotask";
             var completed = true;
             var order = 5;
 
             var todoTaskUpdate = new TodoTaskUpdate
             {
-                Title = "Mais vous êtes pas un peu marteau vous ?",
-                Completed = true,
-                Order = 5
+                Title = title,
+                Completed = completed,
+                Order = order
             };
 
             var actual = await _todoTaskController.PatchAsync(guid, todoTaskUpdate);

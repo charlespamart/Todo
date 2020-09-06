@@ -12,7 +12,7 @@ namespace Todo.API.Tests.Models
         [Fact]
         public void MapATodoTaskViewToATodoTask()
         {
-            var todoTask = new TodoTask(Guid.NewGuid(), "C'est le bon choix. Bien d'accord !", true, 0);
+            var todoTask = new TodoTask(Guid.NewGuid(), "Todotask", true, 0);
             var todoTaskView = TodoTaskView.FromDomain(todoTask, new Uri($"{Url}/{todoTask.Id}"));
 
             Assert.Equal(todoTask.Id, todoTaskView.Id);

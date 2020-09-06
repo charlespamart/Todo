@@ -10,10 +10,10 @@ namespace Todo.DAL.Tests.Models
         public void BeInitializedWithConstructor()
         {
             var id = Guid.NewGuid();
-            var todoTaskData = new TodoTaskData { Id = id, Title = "Vous voulez un whisky ?", Order = 0, Completed = true };
+            var todoTaskData = new TodoTaskData { Id = id, Title = "TodotaskData", Order = 0, Completed = true };
 
             Assert.Equal(id, todoTaskData.Id);
-            Assert.Equal("Vous voulez un whisky ?", todoTaskData.Title);
+            Assert.Equal("TodotaskData", todoTaskData.Title);
             Assert.Equal(0, todoTaskData.Order);
             Assert.True(todoTaskData.Completed);
         }
@@ -21,7 +21,7 @@ namespace Todo.DAL.Tests.Models
         [Fact]
         public void InitializeCompletedToFalseIfNoValueIsGiven()
         {
-            var todoTaskData = new TodoTaskData { Id = Guid.NewGuid(), Title = "- Oh juste un doigt", Order = 0 };
+            var todoTaskData = new TodoTaskData { Id = Guid.NewGuid(), Title = "TodotaskData", Order = 0 };
 
             Assert.False(todoTaskData.Completed);
         }
@@ -29,7 +29,7 @@ namespace Todo.DAL.Tests.Models
         [Fact]
         public void InitializeOrderToZeroIfNoValueIsGiven()
         {
-            var todoTaskData = new TodoTaskData { Id = Guid.NewGuid(), Title = "Vous ne voulez pas un whisky d'abord ?", Completed = true };
+            var todoTaskData = new TodoTaskData { Id = Guid.NewGuid(), Title = "TodotaskData", Completed = true };
 
             Assert.Equal(0, todoTaskData.Order);
         }
