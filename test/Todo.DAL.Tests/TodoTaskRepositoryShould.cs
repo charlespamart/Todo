@@ -20,7 +20,7 @@ namespace Todo.DAL.Tests
             await using var fixture = new TodoContextFixture(new TodoTaskContext(options));
             var repository = new TodoTaskRepository(fixture.Context);
 
-            var result = await repository.GetTodoTasksAsync();
+            var result = await repository.GetAllAsync();
 
             Assert.Equal(fixture.Context.TodoTasks.Select(x => x.ToDomain()), result);
         }
@@ -34,7 +34,7 @@ namespace Todo.DAL.Tests
             var repository = new TodoTaskRepository(fixture.Context);
 
             await repository.ClearAsync();
-            var result = await repository.GetTodoTasksAsync();
+            var result = await repository.GetAllAsync();
 
             Assert.Empty(result);
         }
@@ -49,7 +49,7 @@ namespace Todo.DAL.Tests
 
             var expected = new TodoTask(id, "Never gonna say goodbye", false, 4);
 
-            var result = await repository.GetTodoTaskAsync(id);
+            var result = await repository.GetByIdAsync(id);
 
             Assert.Equal(expected, result);
         }
@@ -64,7 +64,7 @@ namespace Todo.DAL.Tests
 
             var expected = new TodoTask(id, "Never gonna say goodbye", false, 4);
 
-            var result = await repository.GetTodoTaskAsync(Guid.NewGuid());
+            var result = await repository.GetByIdAsync(Guid.NewGuid());
 
             Assert.Null(result);
         }
@@ -85,7 +85,7 @@ namespace Todo.DAL.Tests
             Assert.False(returnValue.Completed);
             Assert.Equal(order, returnValue.Order);
 
-            var newlyCreatedTodo = await repository.GetTodoTaskAsync(returnValue.Id);
+            var newlyCreatedTodo = await repository.GetByIdAsync(returnValue.Id);
 
             Assert.Equal(returnValue, newlyCreatedTodo);
         }
@@ -100,7 +100,7 @@ namespace Todo.DAL.Tests
 
             await repository.ClearAsync();
 
-            var result = await repository.GetTodoTasksAsync();
+            var result = await repository.GetAllAsync();
 
             Assert.Empty(result);
         }
@@ -158,7 +158,7 @@ namespace Todo.DAL.Tests
             await using var fixture = new TodoContextFixture(new TodoTaskContext(options));
             var repository = new TodoTaskRepository(fixture.Context);
 
-            var result = await repository.GetTodoTaskAsync(Guid.NewGuid());
+            var result = await repository.GetByIdAsync(Guid.NewGuid());
 
             Assert.Null(result);
         }

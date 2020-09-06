@@ -15,13 +15,13 @@ namespace Todo.Domain
             _TodoRepository = todoTaskRepository;
         }
 
-        public async Task<IEnumerable<TodoTask>> GetTodoTasksAsync()
+        public async Task<IEnumerable<TodoTask>> GetAllAsync()
         {
-            return await _TodoRepository.GetTodoTasksAsync();
+            return await _TodoRepository.GetAllAsync();
         }
-        public async Task<TodoTask> GetTodoTaskAsync(Guid id)
+        public async Task<TodoTask> GetByIdAsync(Guid id)
         {
-            return await _TodoRepository.GetTodoTaskAsync(id);
+            return await _TodoRepository.GetByIdAsync(id);
         }
         public async Task<TodoTask> AddAsync(string title, int order)
         {

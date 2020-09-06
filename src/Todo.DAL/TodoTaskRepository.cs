@@ -18,12 +18,12 @@ namespace Todo.DAL
             _dbContext = dbContext;
         }
 
-        public async Task<IImmutableList<TodoTask>> GetTodoTasksAsync()
+        public async Task<IImmutableList<TodoTask>> GetAllAsync()
         {
             return await Task.FromResult(_dbContext.TodoTasks.Select(x => x.ToDomain()).ToImmutableList());
         }
 
-        public async Task<TodoTask> GetTodoTaskAsync(Guid id)
+        public async Task<TodoTask> GetByIdAsync(Guid id)
         {
             var todoTaskData = await _dbContext.TodoTasks.SingleOrDefaultAsync(x => x.Id == id);
             if (todoTaskData == null)

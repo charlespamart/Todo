@@ -29,7 +29,7 @@ namespace Todo.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllAsync()
         {
-            var todoTasks = await _todoTaskService.GetTodoTasksAsync();
+            var todoTasks = await _todoTaskService.GetAllAsync();
             return Ok(todoTasks.Select(todoTask => TodoTaskView.FromDomain(todoTask, GetResourceUri(todoTask.Id))));
         }
 
@@ -39,7 +39,7 @@ namespace Todo.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetByIdAsync(Guid id)
         {
-            var todoTask = await _todoTaskService.GetTodoTaskAsync(id);
+            var todoTask = await _todoTaskService.GetByIdAsync(id);
             if (todoTask == null)
             {
                 return NotFound();
