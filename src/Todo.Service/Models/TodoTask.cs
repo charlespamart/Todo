@@ -18,18 +18,50 @@ namespace Todo.Domain.Models
             Order = order;
         }
 
+        public bool Equals(TodoTask other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return Id.Equals(other.Id) && Title == other.Title && Completed == other.Completed && Order == other.Order;
+        }
+
         public override bool Equals(object obj)
         {
-            return obj is TodoTask task &&
-                   Id.Equals(task.Id) &&
-                   Title == task.Title &&
-                   Completed == task.Completed &&
-                   Order == task.Order;
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+            return Equals((TodoTask)obj);
         }
 
         public override int GetHashCode()
         {
             return HashCode.Combine(Id, Title, Completed, Order);
+        }
+
+        public static bool operator ==(TodoTask left, TodoTask right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(TodoTask left, TodoTask right)
+        {
+            return !Equals(left, right);
         }
     }
 }

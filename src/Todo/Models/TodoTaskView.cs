@@ -4,7 +4,7 @@ using Todo.Domain.Models;
 
 namespace Todo.API.Models
 {
-    public class TodoTaskView
+    public class TodoTaskView : IEquatable<TodoTaskView>
     {
         public Guid Id { get; }
         public string Title { get; }
@@ -26,20 +26,52 @@ namespace Todo.API.Models
             return new TodoTaskView(todoTask, path);
         }
 
+        public bool Equals(TodoTaskView other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return Id.Equals(other.Id) && Title == other.Title && Completed == other.Completed && Order == other.Order && Equals(Url, other.Url);
+        }
+
         public override bool Equals(object obj)
         {
-            return obj is TodoTaskView view &&
-                   Id.Equals(view.Id) &&
-                   Title == view.Title &&
-                   Completed == view.Completed &&
-                   Order == view.Order &&
-                   EqualityComparer<Uri>.Default.Equals(Url, view.Url);
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+            if (obj.GetType() != this.GetType())
+            {
+                return false;
+            }
+            return Equals((TodoTaskView)obj);
         }
 
         public override int GetHashCode()
         {
             return HashCode.Combine(Id, Title, Completed, Order, Url);
         }
+
+        public static bool operator ==(TodoTaskView left, TodoTaskView right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(TodoTaskView left, TodoTaskView right)
+        {
+            return !Equals(left, right);
+        }
+
     }
 
 }
