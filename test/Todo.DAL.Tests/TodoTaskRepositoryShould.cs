@@ -97,11 +97,9 @@ namespace Todo.DAL.Tests
             await using var fixture = new TodoContextFixture(new TodoTaskContext(options));
             var repository = new TodoTaskRepository(fixture.Context);
 
-            await repository.ClearAsync();
+            var result = await repository.ClearAsync();
 
-            var result = await repository.GetAllAsync();
-
-            Assert.Empty(result);
+            Assert.True(result);
         }
 
         [Fact]

@@ -33,13 +33,18 @@ namespace Todo.DAL
 
         public async Task<TodoTask> AddAsync(string title, int order)
         {
-            var todoTaskData = new TodoTaskData { Title = title, Order = order};
+            var todoTaskData = new TodoTaskData { Title = title, Order = order };
 
             try
             {
                 await _dbContext.TodoTasks.AddAsync(todoTaskData);
-                await _dbContext.SaveChangesAsync();
-                return todoTaskData.ToDomain();
+                var writtenStateEntries = await _dbContext.SaveChangesAsync();
+
+                if (writtenStateEntries == 1)
+                {
+                    return todoTaskData.ToDomain();
+                }
+                return null;
             }
             catch (Exception)
             {
@@ -81,7 +86,7 @@ namespace Todo.DAL
                 todoTaskDataToUpdate.Title = title;
             }
 
-            if(completed.HasValue)
+            if (completed.HasValue)
             {
                 todoTaskDataToUpdate.Completed = completed.Value;
             }
@@ -92,14 +97,21 @@ namespace Todo.DAL
             }
 
             _dbContext.Update(todoTaskDataToUpdate);
-            await _dbContext.SaveChangesAsync();
-            return todoTaskDataToUpdate.ToDomain();
+            var writtenStateEntries = await _dbContext.SaveChangesAsync();
+
+            if (writtenStateEntries == 1)
+            {
+                return todoTaskDataToUpdate.ToDomain();
+            }
+            return null;
         }
-        public async Task ClearAsync()
+        public async Task<bool> ClearAsync()
         {
             var todoTasks = _dbContext.TodoTasks;
             _dbContext.TodoTasks.RemoveRange(todoTasks);
-            await _dbContext.SaveChangesAsync();
+            var writtenStateEntries = await _dbContext.SaveChangesAsync();
+
+            return writtenStateEntries != 0;
         }
     }
 }
