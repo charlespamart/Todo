@@ -49,7 +49,7 @@ namespace Todo
             services.AddSwaggerDocument();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, TodoTaskContext todoContext)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
