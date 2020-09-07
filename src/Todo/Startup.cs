@@ -54,14 +54,13 @@ namespace Todo
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseCors(_myCorsPolicyAllowAll);
             }
 
             app.UseOpenApi();
             app.UseSwaggerUi3();
 
             app.UseHttpsRedirection();
-
-            app.UseCors(_myCorsPolicyAllowAll);
 
             app.UseRouting();
 
