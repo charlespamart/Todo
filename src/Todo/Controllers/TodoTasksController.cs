@@ -120,7 +120,6 @@ namespace Todo.API.Controllers
             return AcceptedAtAction(nameof(PatchAsync), new { id = todoTaskUpdated.Id }, TodoTaskView.FromDomain(todoTaskUpdated, GetResourceUri(todoTaskUpdated.Id)));
         }
 
-        [NonAction]
         private Uri GetResourceUri(Guid id)
         {
             return new Uri(_linkGenerator.GetUriByAction(HttpContext, nameof(GetByIdAsync), ControllerName, new { id }));
