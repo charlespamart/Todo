@@ -136,9 +136,9 @@ namespace Todo.DAL.Tests
             await using var fixture = new TodoContextFixture(new TodoTaskContext(options));
             var repository = new TodoTaskRepository(fixture.Context);
 
-            var newBoolean = true;
-            var newTitle = "Title";
-            var newOrder = 15;
+            const bool newBoolean = true;
+            const string newTitle = "Title";
+            const int newOrder = 15;
 
             var result = await repository.UpdateAsync(id, newTitle, newBoolean, newOrder);
 
