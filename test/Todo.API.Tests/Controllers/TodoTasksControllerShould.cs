@@ -19,7 +19,7 @@ namespace Todo.API.Tests.Controllers
     {
         private const string DefaultBaseUri = "https://arandomurl";
 
-        static private readonly IImmutableList<Guid> _Guids = new List<Guid>() {
+        private static readonly IImmutableList<Guid> _Guids = new List<Guid>() {
             new Guid("00000000-0000-0000-0000-000000000001"), 
             new Guid("00000000-0000-0000-0000-000000000002"),
             new Guid("00000000-0000-0000-0000-000000000003"),
