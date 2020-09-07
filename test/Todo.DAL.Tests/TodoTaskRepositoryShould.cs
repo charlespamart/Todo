@@ -62,8 +62,6 @@ namespace Todo.DAL.Tests
             await using var fixture = new TodoContextFixture(new TodoTaskContext(options));
             var repository = new TodoTaskRepository(fixture.Context);
 
-            var expected = new TodoTask(id, "Todotask", false, 4);
-
             var result = await repository.GetByIdAsync(Guid.NewGuid());
 
             Assert.Null(result);
@@ -79,6 +77,7 @@ namespace Todo.DAL.Tests
 
             const string title = "Todotask";
             const int order = 4;
+
             var returnValue = await repository.AddAsync(title, order);
 
             Assert.Equal(title, returnValue.Title);

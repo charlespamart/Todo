@@ -113,8 +113,8 @@ namespace Todo.API.Tests.Controllers
         [Fact]
         public async Task BeAbleToCreateANewTodoTaskAsync()
         {
-            var title = "Todotask 0";
-            var order = 0;
+            const string title = "Todotask 0";
+            const int order = 0;
 
             var expected = TodoTaskView.FromDomain(_todoTasks.Single(x => x.Id == _guid), new Uri($"{DefaultBaseUri}/{_guid}"));
 
@@ -134,9 +134,9 @@ namespace Todo.API.Tests.Controllers
         [Fact]
         public async Task BeAbleToPutTodoTaskAsync()
         {
-            var title = "Todotask";
-            var completed = true;
-            var order = 5;
+            const string title = "Todotask";
+            const bool completed = true;
+            const int order = 5;
 
             var todoTaskUpdate = new TodoTaskUpdate
             {
@@ -161,8 +161,8 @@ namespace Todo.API.Tests.Controllers
         [Fact]
         public async Task ReturnBadRequestIfTitleIsNullWhenCallingPutAsync()
         {
-            var completed = true;
-            var order = 5;
+            const bool completed = true;
+            const int order = 5;
 
             var todoTaskUpdate = new TodoTaskUpdate
             {
@@ -183,9 +183,9 @@ namespace Todo.API.Tests.Controllers
         public async Task ReturnNotFoundOnNonExistingTodoTaskWhenCallingPutAsync()
         {
             var guid = Guid.NewGuid();
-            var title = "Todotask";
-            var completed = true;
-            var order = 5;
+            const string title = "Todotask";
+            const bool completed = true;
+            const int order = 5;
 
             var todoTaskUpdate = new TodoTaskUpdate
             {
@@ -205,9 +205,9 @@ namespace Todo.API.Tests.Controllers
         [Fact]
         public async Task BeAbleToPatchAsync()
         {
-            var title = "Todotask";
-            var completed = true;
-            var order = 2;
+            const string title = "Todotask";
+            const bool completed = true;
+            const int order = 2;
 
             var expected = TodoTaskView.FromDomain(new TodoTask(_guid, title, completed, order), new Uri($"{DefaultBaseUri}/{_guid}"));
 
@@ -240,9 +240,9 @@ namespace Todo.API.Tests.Controllers
         public async Task ReturnNotFoundOnNonExistingTodoTaskWhileCallingPatchAsync()
         {
             var _guid = Guid.NewGuid();
-            var title = "Todotask";
-            var completed = true;
-            var order = 5;
+            const string title = "Todotask";
+            const bool completed = true;
+            const int order = 5;
 
             var todoTaskUpdate = new TodoTaskUpdate
             {
