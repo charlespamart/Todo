@@ -14,7 +14,7 @@ namespace Todo.API.Tests.Models
         {
             var todoTask = new TodoTask(Guid.NewGuid(), "Todotask", true, 0);
             var url = new Uri($"{Url}/{todoTask.Id}");
-            var todoTaskView = TodoTaskView.FromDomain(todoTask, url));
+            var todoTaskView = TodoTaskView.FromDomain(todoTask, url);
 
             Assert.Equal(todoTask.Id, todoTaskView.Id);
             Assert.Equal(todoTask.Title, todoTaskView.Title);

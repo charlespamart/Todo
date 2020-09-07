@@ -19,29 +19,22 @@ namespace Todo.API.Tests.Controllers
     {
         private const string DefaultBaseUri = "https://arandomurl";
 
-        private static readonly IImmutableList<Guid> _Guids = new List<Guid>() {
-            new Guid("00000000-0000-0000-0000-000000000001"), 
-            new Guid("00000000-0000-0000-0000-000000000002"),
-            new Guid("00000000-0000-0000-0000-000000000003"),
-            new Guid("00000000-0000-0000-0000-000000000004")
-        }.ToImmutableList();
+        private static readonly Guid _guid = Guid.Empty;
 
         private readonly Mock<ITodoTaskService> _mockTodoTaskService;
 
         private readonly TodoTasksController _todoTaskController;
 
-        private readonly List<TodoTask> todoTasks;
+        private readonly IImmutableList<TodoTask> _todoTasks = new List<TodoTask>
+            {
+                new TodoTask(new Guid("00000000-0000-0000-0000-000000000000"), "Todotask 0", true, 0),
+                new TodoTask(new Guid("00000000-0000-0000-0000-000000000001"), "Todotask 1", false, 1),
+                new TodoTask(new Guid("00000000-0000-0000-0000-000000000002"), "Todotask 2", true, 2),
+                new TodoTask(new Guid("00000000-0000-0000-0000-000000000003"), "Todotask 3", false, 3),
+            }.ToImmutableList();
 
         public TodoTasksControllerShould()
         {
-            todoTasks = new List<TodoTask>
-            {
-                new TodoTask(_Guids[0], "Todotask 0", true, 0),
-                new TodoTask(_Guids[1], "Todotask 1", false, 1),
-                new TodoTask(_Guids[2], "Todotask 2", true, 2),
-                new TodoTask(_Guids[3], "Todotask 3", false, 3),
-            };
-
             _mockTodoTaskService = new Mock<ITodoTaskService>();
 
             Mock<LinkGenerator> mockLinkGenerator = new Mock<LinkGenerator>();
@@ -75,9 +68,9 @@ namespace Todo.API.Tests.Controllers
         [Fact]
         public async Task BeAbleToGetAllTodoTasksAsync()
         {
-            var expected = todoTasks.Select(x => TodoTaskView.FromDomain(x, new Uri($"{DefaultBaseUri}/{x.Id}"))).ToImmutableList();
+            var expected = _todoTasks.Select(x => TodoTaskView.FromDomain(x, new Uri($"{DefaultBaseUri}/{x.Id}"))).ToImmutableList();
 
-            _mockTodoTaskService.Setup(x => x.GetAllAsync()).ReturnsAsync(todoTasks);
+            _mockTodoTaskService.Setup(x => x.GetAllAsync()).ReturnsAsync(_todoTasks);
 
             var actual = await _todoTaskController.GetAllAsync();
 
@@ -91,46 +84,41 @@ namespace Todo.API.Tests.Controllers
         [Fact]
         public async Task BeAbleToGetATodoTaskByIdAsync()
         {
-            var guid = _Guids.First();
+            var expected = TodoTaskView.FromDomain(_todoTasks.Single(x => x.Id == _guid), new Uri($"{DefaultBaseUri}/{_guid}"));
 
-            var expected = TodoTaskView.FromDomain(todoTasks.Single(x => x.Id == guid), new Uri($"{DefaultBaseUri}/{guid}"));
+            _mockTodoTaskService.Setup(x => x.GetByIdAsync(_guid)).ReturnsAsync(_todoTasks.Single(x => x.Id == _guid));
 
-            _mockTodoTaskService.Setup(x => x.GetByIdAsync(guid)).ReturnsAsync(todoTasks.Single(x => x.Id == guid));
-
-            var actual = await _todoTaskController.GetByIdAsync(guid);
+            var actual = await _todoTaskController.GetByIdAsync(_guid);
 
             Assert.IsType<OkObjectResult>(actual);
             Assert.Equal(expected, ((OkObjectResult)actual).Value);
 
-            _mockTodoTaskService.Verify(x => x.GetByIdAsync(guid), Times.Once());
+            _mockTodoTaskService.Verify(x => x.GetByIdAsync(_guid), Times.Once());
             _mockTodoTaskService.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async Task ReturnNullOnNonExistingTodoTaskByIdAsync()
         {
-            var guid = _Guids.First();
+            _mockTodoTaskService.Setup(x => x.GetByIdAsync(_guid)).ReturnsAsync((TodoTask)null);
 
-            _mockTodoTaskService.Setup(x => x.GetByIdAsync(guid)).ReturnsAsync((TodoTask)null);
-
-            var actual = await _todoTaskController.GetByIdAsync(guid);
+            var actual = await _todoTaskController.GetByIdAsync(_guid);
 
             Assert.IsType<NotFoundResult>(actual);
 
-            _mockTodoTaskService.Verify(x => x.GetByIdAsync(guid), Times.Once());
+            _mockTodoTaskService.Verify(x => x.GetByIdAsync(_guid), Times.Once());
             _mockTodoTaskService.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async Task BeAbleToCreateANewTodoTaskAsync()
         {
-            var guid = _Guids.First();
-            var title = "Todotask 1";
-            var order = 1;
+            var title = "Todotask 0";
+            var order = 0;
 
-            var expected = TodoTaskView.FromDomain(todoTasks.Single(x => x.Id == guid), new Uri($"{DefaultBaseUri}/{guid}"));
+            var expected = TodoTaskView.FromDomain(_todoTasks.Single(x => x.Id == _guid), new Uri($"{DefaultBaseUri}/{_guid}"));
 
-            _mockTodoTaskService.Setup(x => x.AddAsync(title, order)).ReturnsAsync(todoTasks.Single(x => x.Id == guid));
+            _mockTodoTaskService.Setup(x => x.AddAsync(title, order)).ReturnsAsync(_todoTasks.Single(x => x.Id == _guid));
 
             var todoTaskCreate = new TodoTaskCreate { Title = title, Order = order };
 
@@ -146,7 +134,6 @@ namespace Todo.API.Tests.Controllers
         [Fact]
         public async Task BeAbleToPutTodoTaskAsync()
         {
-            var guid = _Guids.First();
             var title = "Todotask";
             var completed = true;
             var order = 5;
@@ -158,23 +145,22 @@ namespace Todo.API.Tests.Controllers
                 Order = order
             };
 
-            var expected = TodoTaskView.FromDomain(todoTasks.Single(x => x.Id == guid), new Uri($"{DefaultBaseUri}/{guid}"));
+            var expected = TodoTaskView.FromDomain(_todoTasks.Single(x => x.Id == _guid), new Uri($"{DefaultBaseUri}/{_guid}"));
 
-            _mockTodoTaskService.Setup(x => x.UpdateAsync(guid, title, completed, order)).ReturnsAsync(todoTasks.Single(x => x.Id == guid));
+            _mockTodoTaskService.Setup(x => x.UpdateAsync(_guid, title, completed, order)).ReturnsAsync(_todoTasks.Single(x => x.Id == _guid));
 
-            var actual = await _todoTaskController.PutAsync(guid, todoTaskUpdate);
+            var actual = await _todoTaskController.PutAsync(_guid, todoTaskUpdate);
 
             Assert.IsType<AcceptedAtActionResult>(actual);
             Assert.Equal(expected, ((AcceptedAtActionResult)actual).Value);
 
-            _mockTodoTaskService.Verify(x => x.UpdateAsync(guid, title, completed, order), Times.Once());
+            _mockTodoTaskService.Verify(x => x.UpdateAsync(_guid, title, completed, order), Times.Once());
             _mockTodoTaskService.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async Task ReturnBadRequestIfTitleIsNullWhenCallingPutAsync()
         {
-            var guid = _Guids.First();
             var completed = true;
             var order = 5;
 
@@ -185,11 +171,11 @@ namespace Todo.API.Tests.Controllers
                 Order = order
             };
 
-            var actual = await _todoTaskController.PutAsync(guid, todoTaskUpdate);
+            var actual = await _todoTaskController.PutAsync(_guid, todoTaskUpdate);
 
             Assert.IsType<BadRequestResult>(actual);
 
-            _mockTodoTaskService.Verify(x => x.UpdateAsync(guid, null, completed, order), Times.Never());
+            _mockTodoTaskService.Verify(x => x.UpdateAsync(_guid, null, completed, order), Times.Never());
             _mockTodoTaskService.VerifyNoOtherCalls();
         }
 
@@ -219,12 +205,11 @@ namespace Todo.API.Tests.Controllers
         [Fact]
         public async Task BeAbleToPatchAsync()
         {
-            var guid = _Guids.First();
             var title = "Todotask";
             var completed = true;
             var order = 2;
 
-            var expected = TodoTaskView.FromDomain(new TodoTask(guid, title, completed, order), new Uri($"{DefaultBaseUri}/{guid}"));
+            var expected = TodoTaskView.FromDomain(new TodoTask(_guid, title, completed, order), new Uri($"{DefaultBaseUri}/{_guid}"));
 
             var todoTaskUpdate = new TodoTaskUpdate
             {
@@ -233,28 +218,28 @@ namespace Todo.API.Tests.Controllers
                 Order = order
             };
 
-            _mockTodoTaskService.Setup(x => x.UpdateAsync(guid, title, completed, order)).ReturnsAsync(new TodoTask(guid, title, completed, order));
+            _mockTodoTaskService.Setup(x => x.UpdateAsync(_guid, title, completed, order)).ReturnsAsync(new TodoTask(_guid, title, completed, order));
 
-            var actual = await _todoTaskController.PatchAsync(guid, todoTaskUpdate);
+            var actual = await _todoTaskController.PatchAsync(_guid, todoTaskUpdate);
 
             Assert.IsType<AcceptedAtActionResult>(actual);
 
             var actualValues = (TodoTaskView)((AcceptedAtActionResult)actual).Value;
 
-            Assert.Equal(guid, actualValues.Id);
+            Assert.Equal(_guid, actualValues.Id);
             Assert.Equal(title, actualValues.Title);
             Assert.Equal(completed, actualValues.Completed);
             Assert.Equal(order, actualValues.Order);
-            Assert.Equal(new Uri($"{DefaultBaseUri}/{guid}"), actualValues.Url);
+            Assert.Equal(new Uri($"{DefaultBaseUri}/{_guid}"), actualValues.Url);
 
-            _mockTodoTaskService.Verify(x => x.UpdateAsync(guid, title, completed, order), Times.Once());
+            _mockTodoTaskService.Verify(x => x.UpdateAsync(_guid, title, completed, order), Times.Once());
             _mockTodoTaskService.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async Task ReturnNotFoundOnNonExistingTodoTaskWhileCallingPatchAsync()
         {
-            var guid = Guid.NewGuid();
+            var _guid = Guid.NewGuid();
             var title = "Todotask";
             var completed = true;
             var order = 5;
@@ -266,11 +251,11 @@ namespace Todo.API.Tests.Controllers
                 Order = order
             };
 
-            var actual = await _todoTaskController.PatchAsync(guid, todoTaskUpdate);
+            var actual = await _todoTaskController.PatchAsync(_guid, todoTaskUpdate);
 
             Assert.IsType<NotFoundResult>(actual);
 
-            _mockTodoTaskService.Verify(x => x.UpdateAsync(guid, title, completed, order), Times.Once());
+            _mockTodoTaskService.Verify(x => x.UpdateAsync(_guid, title, completed, order), Times.Once());
             _mockTodoTaskService.VerifyNoOtherCalls();
         }
 
@@ -288,30 +273,28 @@ namespace Todo.API.Tests.Controllers
         [Fact]
         public async Task BeAbleToRemoveByIdAsync()
         {
-            var guid = _Guids.First();
 
-            _mockTodoTaskService.Setup(x => x.RemoveAsync(guid)).ReturnsAsync(true);
+            _mockTodoTaskService.Setup(x => x.RemoveAsync(_guid)).ReturnsAsync(true);
 
-            var actual = await _todoTaskController.RemoveByIdAsync(guid);
+            var actual = await _todoTaskController.RemoveByIdAsync(_guid);
 
             Assert.IsType<NoContentResult>(actual);
 
-            _mockTodoTaskService.Verify(x => x.RemoveAsync(guid), Times.Once());
+            _mockTodoTaskService.Verify(x => x.RemoveAsync(_guid), Times.Once());
             _mockTodoTaskService.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async Task NotBeAbleToRemoveNonExistingTodoTaskByIdAsync()
         {
-            var guid = _Guids.First();
 
-            _mockTodoTaskService.Setup(x => x.RemoveAsync(guid)).ReturnsAsync(false);
+            _mockTodoTaskService.Setup(x => x.RemoveAsync(_guid)).ReturnsAsync(false);
 
-            var actual = await _todoTaskController.RemoveByIdAsync(guid);
+            var actual = await _todoTaskController.RemoveByIdAsync(_guid);
 
             Assert.IsType<ConflictResult>(actual);
 
-            _mockTodoTaskService.Verify(x => x.RemoveAsync(guid), Times.Once());
+            _mockTodoTaskService.Verify(x => x.RemoveAsync(_guid), Times.Once());
             _mockTodoTaskService.VerifyNoOtherCalls();
         }
     }
