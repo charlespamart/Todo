@@ -7,7 +7,7 @@ namespace Todo.API.Tests.Models
 {
     public class TodoTaskViewShould
     {
-        private readonly string Url = "https://arandomurl";
+        private const string Url = "https://arandomurl";
 
         [Fact]
         public void MapATodoTaskViewToATodoTask()
