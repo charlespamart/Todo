@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Todo.Domain.Models;
 
 namespace Todo.API.Models

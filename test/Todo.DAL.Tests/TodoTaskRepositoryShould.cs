@@ -3,8 +3,6 @@ using System;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
-using Todo.DAL.Models;
-using Todo.Domain.Models;
 using Todo.Domain.TestHelpers;
 using Xunit;
 
