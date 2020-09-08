@@ -15,8 +15,8 @@ namespace Todo
 {
     public class Startup
     {
-        private const string _myCorsPolicyAllowAll = "CorsPolicyAllowAll";
-        private const string _dBName = "TodoTaskDB";
+        private const string MyCorsPolicyAllowAll = "CorsPolicyAllowAll";
+        private const string DBName = "TodoTaskDB";
 
         public IConfiguration Configuration { get; }
         public Startup(IConfiguration configuration)
@@ -34,11 +34,11 @@ namespace Todo
             services.AddScoped<ITodoTaskService, TodoTaskService>();
 
             services.AddDbContext<TodoTaskContext>(opt =>
-                opt.UseInMemoryDatabase(_dBName));
+                opt.UseInMemoryDatabase(DBName));
 
             services.AddCors(options =>
             {
-                options.AddPolicy(name: _myCorsPolicyAllowAll,
+                options.AddPolicy(name: MyCorsPolicyAllowAll,
                               builder =>
                               {
                                   builder.AllowAnyOrigin();
@@ -55,7 +55,7 @@ namespace Todo
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseCors(_myCorsPolicyAllowAll);
+                app.UseCors(MyCorsPolicyAllowAll);
             }
 
             app.UseOpenApi();
