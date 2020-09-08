@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Todo.Domain.Models
 {
-    public class TodoTask
+    public class TodoTask : IEquatable<TodoTask>
     {
         public Guid Id { get; }
         public string Title { get; }
