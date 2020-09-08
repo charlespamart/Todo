@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Todo.Domain.Tests", "test\T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Todo.API.IntegrationTests", "test\Todo.API.IntegrationTests\Todo.API.IntegrationTests.csproj", "{B7C868FB-A236-44C3-A08F-EA2946729EE8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Todo.Domain.TestHelpers", "Todo.Domain.TestHelpers\Todo.Domain.TestHelpers.csproj", "{A97E45F2-1E58-4693-93F3-6135CF4CB67F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{B7C868FB-A236-44C3-A08F-EA2946729EE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B7C868FB-A236-44C3-A08F-EA2946729EE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B7C868FB-A236-44C3-A08F-EA2946729EE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A97E45F2-1E58-4693-93F3-6135CF4CB67F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A97E45F2-1E58-4693-93F3-6135CF4CB67F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A97E45F2-1E58-4693-93F3-6135CF4CB67F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A97E45F2-1E58-4693-93F3-6135CF4CB67F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Todo.DAL\Todo.DAL.csproj" />
+    <ProjectReference Include="..\..\Todo.Domain.TestHelpers\Todo.Domain.TestHelpers.csproj" />
   </ItemGroup>
 
 </Project>

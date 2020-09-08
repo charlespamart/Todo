@@ -1,16 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Todo.DAL.Models;
 using Todo.Domain.Models;
+using Todo.Domain.TestHelpers;
 using Xunit;
 
 namespace Todo.DAL.Tests
 {
     public class TodoTaskRepositoryShould
     {
-        public static readonly Guid id = Guid.NewGuid();
 
         [Fact]
         public async Task GetAllTodoTasks()
@@ -47,9 +48,9 @@ namespace Todo.DAL.Tests
             await using var fixture = new TodoContextFixture(new TodoTaskContext(options));
             var repository = new TodoTaskRepository(fixture.Context);
 
-            var expected = new TodoTask(id, "Todotask", false, 4);
+            var expected = TestHelpers.todoTask;
 
-            var result = await repository.GetByIdAsync(id);
+            var result = await repository.GetByIdAsync(TestHelpers.Guid);
 
             Assert.Equal(expected, result);
         }
@@ -110,7 +111,7 @@ namespace Todo.DAL.Tests
             await using var fixture = new TodoContextFixture(new TodoTaskContext(options));
             var repository = new TodoTaskRepository(fixture.Context);
 
-            var result = await repository.RemoveAsync(id);
+            var result = await repository.RemoveAsync(TestHelpers.Guid);
 
             Assert.True(result);
         }
@@ -140,7 +141,7 @@ namespace Todo.DAL.Tests
             const string newTitle = "Title";
             const int newOrder = 15;
 
-            var result = await repository.UpdateAsync(id, newTitle, newBoolean, newOrder);
+            var result = await repository.UpdateAsync(TestHelpers.Guid, newTitle, newBoolean, newOrder);
 
             Assert.Equal(newTitle, result.Title);
             Assert.Equal(newBoolean, result.Completed);
@@ -179,16 +180,11 @@ namespace Todo.DAL.Tests
 
         private void Seed()
         {
-            Context.Database.EnsureDeleted();
-            Context.Database.EnsureCreated();
+            Context.Database.EnsureCreatedAsync();
 
-            Context.TodoTasks.Add(new TodoTaskData() { Title = "TodotaskData 0", Completed = false, Order = 0 });
-            Context.TodoTasks.Add(new TodoTaskData() { Title = "TodotaskData 1", Completed = false, Order = 1 });
-            Context.TodoTasks.Add(new TodoTaskData() { Title = "TodotaskData 2", Completed = false, Order = 2 });
-            Context.TodoTasks.Add(new TodoTaskData() { Title = "TodotaskData 3", Completed = false, Order = 3 });
-            Context.TodoTasks.Add(new TodoTaskData() { Id = TodoTaskRepositoryShould.id, Title = "Todotask", Completed = false, Order = 4 });
+            Context.TodoTasks.AddRangeAsync(TestHelpers.TodoTasks.Select(TestHelpers.TodoDataFromDomain).ToImmutableList());
 
-            Context.SaveChanges();
+            Context.SaveChangesAsync();
         }
 
         public async ValueTask DisposeAsync()
