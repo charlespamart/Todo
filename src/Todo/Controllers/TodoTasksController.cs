@@ -105,6 +105,26 @@ namespace Todo.API.Controllers
             return AcceptedAtAction(nameof(PutAsync), new { id = todoTaskUpdated.Id }, TodoTaskView.FromDomain(todoTaskUpdated, GetResourceUri(todoTaskUpdated.Id)));
         }
 
+        [HttpPut]
+        [ActionName(nameof(PatchAllCompletedStateAsync))]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> PatchAllCompletedStateAsync(TodoTaskPatchAllCompletedState todoTaskPatchAllCompletedState)
+        {
+            if (!todoTaskPatchAllCompletedState.Completed.HasValue)
+            {
+                return BadRequest();
+            }
+            var todoTasksPatched = await _todoTaskService.UpdateAllCompletedStateAsync(todoTaskPatchAllCompletedState.Completed.Value);
+
+            if (todoTasksPatched == null)
+            {
+                return NoContent();
+            }
+            return AcceptedAtAction(nameof(PatchAllCompletedStateAsync), todoTasksPatched.Select(todoTask => TodoTaskView.FromDomain(todoTask, GetResourceUri(todoTask.Id))));
+        }
+
         [HttpPatch("{id:guid}")]
         [ActionName(nameof(PatchAsync))]
         [ProducesResponseType(StatusCodes.Status200OK)]

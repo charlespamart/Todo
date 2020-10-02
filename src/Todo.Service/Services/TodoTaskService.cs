@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Todo.Domain.Interfaces;
 using Todo.Domain.Models;
@@ -36,6 +37,12 @@ namespace Todo.Domain
         {
             return await _todoRepository.UpdateAsync(id, title, completed, order);
         }
+
+        public async Task<ImmutableList<TodoTask>> UpdateAllCompletedStateAsync(bool completed)
+        {
+            return await _todoRepository.UpdateAllCompletedStateAsync(completed);
+        }
+
         public async Task<bool> ClearAsync()
         {
             return await _todoRepository.ClearAsync();

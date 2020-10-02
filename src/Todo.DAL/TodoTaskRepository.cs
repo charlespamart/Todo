@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Immutable;
+using System.ComponentModel;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Todo.DAL.Models;
 using Todo.Domain.Interfaces;
@@ -105,6 +107,26 @@ namespace Todo.DAL
             }
             return null;
         }
+
+        public async Task<ImmutableList<TodoTask>> UpdateAllCompletedStateAsync(bool completed)
+        {
+            var todoTasks = _dbContext.TodoTasks;
+
+            foreach(TodoTaskData todoTask in todoTasks)
+            {
+                todoTask.Completed = completed;
+            }
+
+            _dbContext.UpdateRange(todoTasks);
+            var writtenStateEntries = await _dbContext.SaveChangesAsync();
+
+            if (writtenStateEntries == todoTasks.Count())
+            {
+                return todoTasks.Select(x => x.ToDomain()).ToImmutableList();
+            }
+            return null;
+        }
+
         public async Task<bool> ClearAsync()
         {
             var todoTasks = _dbContext.TodoTasks;

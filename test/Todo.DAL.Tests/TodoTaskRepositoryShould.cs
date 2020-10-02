@@ -128,6 +128,21 @@ namespace Todo.DAL.Tests
         }
 
         [Fact]
+        public async Task UpdateAllTodosCompletedStateAndReturnResult()
+        {
+            var options = CreateInMemoryDB(nameof(UpdateAllTodosCompletedStateAndReturnResult));
+
+            await using var fixture = new TodoContextFixture(new TodoTaskContext(options));
+            var repository = new TodoTaskRepository(fixture.Context);
+            var expected = TestHelpers.TodoTasks.Select();
+
+            var result = await repository.UpdateAllCompletedStateAsync(true);
+
+            Assert.NotEmpty(result);
+            Assert.Equal();
+        }
+
+        [Fact]
         public async Task UpdateTodoTaskAndReturnUpdatedTodoTask()
         {
             var options = CreateInMemoryDB(nameof(UpdateTodoTaskAndReturnUpdatedTodoTask));
