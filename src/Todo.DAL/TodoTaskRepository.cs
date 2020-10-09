@@ -135,5 +135,20 @@ namespace Todo.DAL
 
             return writtenStateEntries != 0;
         }
+
+        public async Task<ImmutableList<TodoTask>> ClearAllCompletedAsync()
+        {
+            var todoTasks = _dbContext.TodoTasks;
+            var todoTasksToRemove = todoTasks.Where(x => x.Completed == true).ToList();
+
+            _dbContext.TodoTasks.RemoveRange(todoTasksToRemove);
+            var writtenStateEntries = await _dbContext.SaveChangesAsync();
+
+            if (writtenStateEntries == todoTasksToRemove.Count)
+            {
+                return todoTasks.Where(x => x.Completed == false).Select(x => x.ToDomain()).ToImmutableList();
+            }
+            return null;
+        }
     }
 }

@@ -47,5 +47,10 @@ namespace Todo.Domain
         {
             return await _todoRepository.ClearAsync();
         }
+
+        public async Task<ImmutableList<TodoTask>> ClearAllCompletedAsync()
+        {
+            return await _todoRepository.ClearAllCompletedAsync();
+        }
     }
 }

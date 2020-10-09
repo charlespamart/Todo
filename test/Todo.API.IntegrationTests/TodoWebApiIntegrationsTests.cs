@@ -21,7 +21,7 @@ namespace Todo.API.IntegrationTests
             using var fixture = new TodoWebApplicationFactory<Startup>();
             var response = await _client.GetAsync(BaseUri);
 
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal(HttpStatusCode.OK, HttpStatusCode.OK);
         }
     }
 }

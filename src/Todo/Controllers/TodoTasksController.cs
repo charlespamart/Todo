@@ -55,7 +55,7 @@ namespace Todo.API.Controllers
         {
             var todoTaskAdd = await _todoTaskService.AddAsync(todoTaskCreate.Title, todoTaskCreate.Order);
 
-            if(todoTaskAdd.Title == null)
+            if (todoTaskAdd.Title == null)
             {
                 return BadRequest();
             }
@@ -68,7 +68,7 @@ namespace Todo.API.Controllers
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> RemoveByIdAsync(Guid id)
         {
-            if ( await _todoTaskService.RemoveAsync(id))
+            if (await _todoTaskService.RemoveAsync(id))
             {
                 return NoContent();
             }
@@ -82,6 +82,21 @@ namespace Todo.API.Controllers
         {
             await _todoTaskService.ClearAsync();
             return NoContent();
+        }
+
+        [HttpDelete("clearcompleted")]
+        [ActionName(nameof(ClearAllCompletedAsync))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> ClearAllCompletedAsync()
+        {
+            var todoTasks = await _todoTaskService.ClearAllCompletedAsync();
+
+            if (todoTasks == null)
+            {
+                return NoContent();
+            }
+
+            return Ok(todoTasks.Select(todoTask => TodoTaskView.FromDomain(todoTask, GetResourceUri(todoTask.Id))));
         }
 
         [HttpPut("{id:guid}")]
@@ -105,7 +120,7 @@ namespace Todo.API.Controllers
             return AcceptedAtAction(nameof(PutAsync), new { id = todoTaskUpdated.Id }, TodoTaskView.FromDomain(todoTaskUpdated, GetResourceUri(todoTaskUpdated.Id)));
         }
 
-        [HttpPut]
+        [HttpPatch]
         [ActionName(nameof(PatchAllCompletedStateAsync))]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
