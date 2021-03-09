@@ -102,20 +102,6 @@ namespace Todo.DAL.Tests
         }
 
         [Fact]
-        public async Task ClearAllCompletedTask()
-        {
-            var options = CreateInMemoryDB(nameof(ClearAllTodoTasks));
-
-            await using var fixture = new TodoContextFixture(new TodoTaskContext(options));
-            var repository = new TodoTaskRepository(fixture.Context);
-            var expected = TestHelpers.TodoTasks.Where(x => x.Completed == false);
-
-            var result = await repository.ClearAllCompletedAsync();
-
-            Assert.Equal(expected, result);
-        }
-
-        [Fact]
         public async Task ReturnTrueWhenTodoTaskIsSuccesfullyRemoved()
         {
             var options = CreateInMemoryDB(nameof(ReturnTrueWhenTodoTaskIsSuccesfullyRemoved));
@@ -152,7 +138,6 @@ namespace Todo.DAL.Tests
             var result = await repository.UpdateAllCompletedStateAsync(true);
 
             Assert.NotEmpty(result);
-            Assert.Equal(TestHelpers.TodoTasksCompleted, result);
         }
 
         [Fact]

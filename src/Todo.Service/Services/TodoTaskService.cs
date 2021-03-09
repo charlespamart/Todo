@@ -38,7 +38,7 @@ namespace Todo.Domain
             return await _todoRepository.UpdateAsync(id, title, completed, order);
         }
 
-        public async Task<ImmutableList<TodoTask>> UpdateAllCompletedStateAsync(bool completed)
+        public async Task<IImmutableList<TodoTask>> UpdateAllCompletedStateAsync(bool completed)
         {
             return await _todoRepository.UpdateAllCompletedStateAsync(completed);
         }

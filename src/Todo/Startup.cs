@@ -5,6 +5,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
+using Todo.API.Configuration;
 using Todo.DAL;
 using Todo.Domain;
 using Todo.Domain.Interfaces;
@@ -33,6 +36,14 @@ namespace Todo
 
             services.AddDbContext<TodoTaskContext>(opt =>
                 opt.UseInMemoryDatabase(DBName));
+
+            services.AddApiVersioning(opt =>
+            {
+                opt.DefaultApiVersion = new ApiVersion(1, 0);
+                opt.ReportApiVersions = true;
+                opt.ApiVersionReader = new HeaderApiVersionReader("X-Version");
+                opt.ErrorResponses = new ApiVersioningCustomError();
+            });
 
             services.AddCors(options =>
             {

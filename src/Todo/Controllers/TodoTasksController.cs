@@ -11,6 +11,7 @@ using Todo.Domain.Models;
 namespace Todo.API.Controllers
 {
     [ApiController]
+    [ApiVersion("1.0")]
     [Route(ControllerName)]
     public class TodoTasksController : ControllerBase
     {
